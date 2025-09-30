@@ -1,0 +1,406 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize Next.js Project with TypeScript",
+        "description": "Set up the initial Next.js project with TypeScript for the Agentic CRM.",
+        "details": "Use Next.js 14+ to create a new project. Enable TypeScript support by creating a tsconfig.json file. Install necessary dependencies including TailwindCSS and shadcn/ui for styling. Configure the project to use React Server Components and Zustand for state management.",
+        "testStrategy": "Verify the project builds successfully and the development server runs without errors. Check that TypeScript is correctly configured by creating a sample component with type annotations.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Set Up Supabase Project",
+        "description": "Create a Supabase project for database and authentication needs.",
+        "details": "Sign up for Supabase and create a new project. Set up PostgreSQL database and configure authentication using Supabase Auth. Define initial database schema based on the PRD's data model, including tables for leads, companies, activities, workflows, and agents.",
+        "testStrategy": "Test database connectivity and ensure that tables are created successfully. Verify authentication by creating a test user and logging in.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Create Database Schema and Migrations",
+        "description": "Define and implement the database schema for the CRM system.",
+        "details": "Use Supabase's SQL editor to define tables and relationships as per the PRD's data model. Create migrations to manage schema changes over time. Ensure tables include leads, companies, activities, workflows, workflow_runs, agents, agent_runs, templates, campaigns, and integrations.",
+        "testStrategy": "Run migrations and verify that the schema is correctly applied. Check that all tables and relationships are correctly established in the database.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Install LangGraph and OpenAI SDK",
+        "description": "Integrate LangGraph and OpenAI SDK for AI agent functionalities.",
+        "details": "Install LangGraph and OpenAI SDK using npm. Configure LangGraph for workflow orchestration and OpenAI for AI capabilities. Set up API keys and environment variables securely for accessing OpenAI services.",
+        "testStrategy": "Verify installation by running a sample LangGraph workflow and making a test call to OpenAI's API. Ensure that API keys are not exposed in the codebase.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Build Basic UI Components",
+        "description": "Develop the initial UI components for the dashboard, leads list, and lead detail views.",
+        "details": "Use Next.js and TailwindCSS to create responsive UI components. Implement pages for the dashboard, leads list with filters, and lead detail view with tabs for overview, research, timeline, conversations, and tasks. Ensure accessibility and usability standards are met.",
+        "testStrategy": "Perform UI testing to ensure components render correctly across different devices and screen sizes. Use tools like Storybook for component testing and visual regression testing.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Lead Enrichment Agent",
+        "description": "Develop the first AI agent for lead enrichment using basic web search capabilities.",
+        "details": "Create a Lead Enrichment Agent using LangGraph and OpenAI. Implement basic web search functionality to gather additional data about leads. Use OpenAI for generating insights and summaries.",
+        "testStrategy": "Test the agent by running enrichment tasks on sample leads. Validate the accuracy and relevance of the enriched data and insights generated.",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Lead Enrichment Agent Architecture",
+            "description": "Create a detailed design for the Lead Enrichment Agent, outlining its architecture and components.",
+            "dependencies": [],
+            "details": "Develop a comprehensive design document that includes the architecture of the Lead Enrichment Agent, specifying how it will interact with LangGraph and OpenAI. Define the data flow and processing steps for lead enrichment.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Basic Web Search Functionality",
+            "description": "Develop the web search capabilities for the Lead Enrichment Agent to gather additional data about leads.",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "Use available web search APIs or libraries to implement a module that can perform basic web searches. Ensure the module can extract relevant data points needed for lead enrichment.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Integrate OpenAI for Insights and Summaries",
+            "description": "Incorporate OpenAI's capabilities to generate insights and summaries from the gathered data.",
+            "dependencies": [
+              "6.2"
+            ],
+            "details": "Set up integration with OpenAI's API to process the data collected from web searches. Implement functionality to generate insights and summaries that enhance the lead enrichment process.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Develop Data Processing and Enrichment Logic",
+            "description": "Create the logic for processing and enriching lead data using the gathered information and OpenAI insights.",
+            "dependencies": [
+              "6.3"
+            ],
+            "details": "Implement the core logic that combines web search data and OpenAI-generated insights to enrich lead profiles. Ensure the logic is efficient and scalable.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Test Lead Enrichment Agent Functionality",
+            "description": "Conduct thorough testing of the Lead Enrichment Agent to ensure it functions correctly and meets requirements.",
+            "dependencies": [
+              "6.4"
+            ],
+            "details": "Design and execute test cases to validate the accuracy and relevance of the enriched data. Use sample leads to test the agent's performance and identify any issues.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Optimize and Document Lead Enrichment Agent",
+            "description": "Optimize the agent's performance and create comprehensive documentation.",
+            "dependencies": [
+              "6.5"
+            ],
+            "details": "Review the agent's performance and make necessary optimizations for efficiency. Document the design, implementation, and usage of the Lead Enrichment Agent for future reference.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Set Up Firecrawl Account and Integration",
+        "description": "Integrate Firecrawl for web scraping capabilities in lead generation.",
+        "details": "Create a Firecrawl account and set up API access. Implement integration with the CRM system to allow web scraping of potential leads from various sources. Ensure compliance with web scraping policies.",
+        "testStrategy": "Test the integration by scraping a sample website and verifying that the data is correctly imported into the CRM system.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Firecrawl Account",
+            "description": "Sign up for a new Firecrawl account to enable web scraping capabilities.",
+            "dependencies": [],
+            "details": "Visit the Firecrawl website and complete the registration process to create a new account.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Set Up API Access",
+            "description": "Configure API access for the Firecrawl account to enable integration.",
+            "dependencies": [
+              "7.1"
+            ],
+            "details": "Log into the Firecrawl account and navigate to the API settings to generate API keys and configure access permissions.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Integrate Firecrawl with CRM",
+            "description": "Implement the integration of Firecrawl with the CRM system for web scraping.",
+            "dependencies": [
+              "7.2"
+            ],
+            "details": "Use the Firecrawl API to connect with the CRM system, allowing for the scraping and importing of lead data.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Test Compliance and Integration",
+            "description": "Ensure the integration complies with web scraping policies and functions correctly.",
+            "dependencies": [
+              "7.3"
+            ],
+            "details": "Test the integration by scraping a sample website, verifying data import into the CRM, and ensuring compliance with relevant policies.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Create Simple LangGraph Workflow",
+        "description": "Develop a basic LangGraph workflow for lead processing.",
+        "details": "Define a simple workflow using LangGraph that includes steps for lead discovery, enrichment, scoring, and status update. Ensure the workflow is modular and can be extended with additional agents and steps.",
+        "testStrategy": "Execute the workflow with test data and verify each step's output. Check for correct state transitions and data handling throughout the workflow.",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Workflow Steps",
+            "description": "Outline the steps for lead discovery, enrichment, scoring, and status update in the LangGraph workflow.",
+            "dependencies": [],
+            "details": "Create a detailed plan for each step in the workflow, ensuring clarity in the sequence and purpose of each step.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Lead Discovery Step",
+            "description": "Develop the lead discovery step in the LangGraph workflow.",
+            "dependencies": [
+              "8.1"
+            ],
+            "details": "Use LangGraph to implement the lead discovery step, ensuring it can identify and capture potential leads effectively.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Enrichment and Scoring Steps",
+            "description": "Develop the enrichment and scoring steps in the LangGraph workflow.",
+            "dependencies": [
+              "8.2"
+            ],
+            "details": "Ensure that the enrichment step adds relevant data to leads and the scoring step evaluates lead quality.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Status Update Step",
+            "description": "Develop the status update step in the LangGraph workflow.",
+            "dependencies": [
+              "8.3"
+            ],
+            "details": "Create a mechanism to update the status of leads based on their score and enrichment data.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Test and Ensure Modularity",
+            "description": "Test the entire workflow and ensure it is modular and extendable.",
+            "dependencies": [
+              "8.4"
+            ],
+            "details": "Execute the workflow with test data, verify each step's output, and ensure the workflow can be easily extended with additional steps.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Build Agent Monitoring Dashboard",
+        "description": "Create a dashboard to monitor the activity and performance of AI agents.",
+        "details": "Develop a real-time monitoring dashboard using Next.js and React Query. Display active agents, logs, outputs, and performance metrics. Include controls to pause, resume, or terminate agents.",
+        "testStrategy": "Test the dashboard by simulating agent activities and verifying that the data is accurately reflected in real-time. Ensure user interactions with the dashboard are responsive and intuitive.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Dashboard UI",
+            "description": "Create the user interface for the agent monitoring dashboard.",
+            "dependencies": [],
+            "details": "Design the layout and components for displaying active agents, logs, outputs, and performance metrics using Next.js and React.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Real-Time Data Fetching",
+            "description": "Set up real-time data fetching for the dashboard.",
+            "dependencies": [
+              "9.1"
+            ],
+            "details": "Use React Query to fetch and update data in real-time, ensuring the dashboard reflects current agent activity and performance.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Integrate Agent Controls",
+            "description": "Add controls to manage agent activities from the dashboard.",
+            "dependencies": [
+              "9.1",
+              "9.2"
+            ],
+            "details": "Implement controls to pause, resume, or terminate agents directly from the dashboard interface.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Develop Performance Metrics Display",
+            "description": "Create components to display performance metrics of AI agents.",
+            "dependencies": [
+              "9.1",
+              "9.2"
+            ],
+            "details": "Design and implement components that show detailed performance metrics such as response time, error rates, and throughput.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Test Dashboard Functionality",
+            "description": "Test the dashboard for real-time updates and user interactions.",
+            "dependencies": [
+              "9.1",
+              "9.2",
+              "9.3",
+              "9.4"
+            ],
+            "details": "Simulate agent activities and verify that the dashboard updates accurately in real-time. Ensure all user interactions are responsive and intuitive.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Optimize Dashboard Performance",
+            "description": "Enhance the performance of the dashboard for better user experience.",
+            "dependencies": [
+              "9.5"
+            ],
+            "details": "Identify and resolve any performance bottlenecks in the dashboard, ensuring smooth and fast operation under various loads.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Prepare Demo Data and Scenarios",
+        "description": "Set up demo data and scenarios for showcasing the CRM's capabilities.",
+        "details": "Create realistic demo data for leads, companies, and workflows. Develop scenarios that highlight key features such as autonomous lead discovery, intelligent outreach, and multi-agent workflows. Ensure scenarios are comprehensive and demonstrate the CRM's value proposition.",
+        "testStrategy": "Run through each demo scenario to ensure they execute smoothly without errors. Validate that the scenarios effectively showcase the CRM's features and benefits.",
+        "priority": "low",
+        "dependencies": [
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Demo Data",
+            "description": "Generate realistic demo data for leads, companies, and workflows.",
+            "dependencies": [],
+            "details": "Develop a dataset that includes various leads, companies, and workflow examples to be used in demo scenarios. Ensure the data is diverse and covers different use cases.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Develop Demo Scenarios",
+            "description": "Create scenarios that highlight key CRM features.",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "Design scenarios that demonstrate autonomous lead discovery, intelligent outreach, and multi-agent workflows. Ensure each scenario effectively showcases the CRM's capabilities.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Test Demo Scenarios",
+            "description": "Run through each demo scenario to ensure smooth execution.",
+            "dependencies": [
+              "10.2"
+            ],
+            "details": "Execute each scenario to verify they run without errors and effectively demonstrate the CRM's features. Make adjustments as needed to enhance clarity and impact.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-30T21:37:23.141Z",
+      "updated": "2025-09-30T22:10:59.597Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
