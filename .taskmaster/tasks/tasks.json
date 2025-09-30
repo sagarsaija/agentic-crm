@@ -152,7 +152,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -160,7 +160,7 @@
             "description": "Sign up for a new Firecrawl account to enable web scraping capabilities.",
             "dependencies": [],
             "details": "Visit the Firecrawl website and complete the registration process to create a new account.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -171,7 +171,7 @@
               "7.1"
             ],
             "details": "Log into the Firecrawl account and navigate to the API settings to generate API keys and configure access permissions.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -182,7 +182,7 @@
               "7.2"
             ],
             "details": "Use the Firecrawl API to connect with the CRM system, allowing for the scraping and importing of lead data.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -193,7 +193,7 @@
               "7.3"
             ],
             "details": "Test the integration by scraping a sample website, verifying data import into the CRM, and ensuring compliance with relevant policies.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -399,7 +399,7 @@
     ],
     "metadata": {
       "created": "2025-09-30T21:37:23.141Z",
-      "updated": "2025-09-30T23:05:08.476Z",
+      "updated": "2025-09-30T23:42:39.395Z",
       "description": "Tasks for master context"
     }
   }
