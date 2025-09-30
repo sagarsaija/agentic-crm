@@ -6,10 +6,7 @@ export async function GET() {
     const supabase = await createClient();
 
     // Test database connection by querying leads
-    const { data, error } = await supabase
-      .from("leads")
-      .select("count")
-      .limit(1);
+    const { error } = await supabase.from("leads").select("count").limit(1);
 
     if (error) {
       return NextResponse.json(

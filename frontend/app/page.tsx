@@ -1,9 +1,5 @@
-import { MyAssistant } from "@/components/MyAssistant";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <main className="h-dvh">
-      <MyAssistant />
-    </main>
-  );
+export default function HomePage() {
+  redirect("/dashboard");
 }
