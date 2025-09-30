@@ -1,259 +1,518 @@
-# AI & Agent Setup Guide
+# 🤖 AI & Agent Infrastructure
 
-This document explains the AI and agent infrastructure for the Agentic CRM.
+Complete guide to the AI and agent setup in the Agentic CRM.
 
 ## 📦 Installed Packages
 
 ### Core AI Libraries
 
-- ✅ **`ai`** (^4.x) - Vercel AI SDK for streaming responses
-- ✅ **`@ai-sdk/openai`** - OpenAI provider for Vercel AI SDK
-- ✅ **`langchain`** - LangChain core for agent building
-- ✅ **`@langchain/openai`** - OpenAI integration for LangChain
-- ✅ **`@langchain/core`** - LangChain core primitives
+| Package                    | Version | Purpose                                     |
+| -------------------------- | ------- | ------------------------------------------- |
+| **`ai`**                   | ^3.2.33 | Vercel AI SDK for streaming and completions |
+| **`@ai-sdk/openai`**       | ^0.0.34 | OpenAI provider for Vercel AI SDK           |
+| **`langchain`**            | ^0.2.11 | LangChain core for agent orchestration      |
+| **`@langchain/openai`**    | ^0.0.34 | OpenAI integration for LangChain            |
+| **`@langchain/core`**      | ^0.2.15 | LangChain core primitives and types         |
+| **`@langchain/community`** | Latest  | Community tools (Tavily search)             |
+| **`tavily`**               | Latest  | AI-optimized web search API                 |
 
 ### LangGraph & assistant-ui
 
-- ✅ **`@assistant-ui/react-langgraph`** (^0.6.9) - LangGraph integration for UI
-- ✅ **`@langchain/langgraph-sdk`** (^0.1.6) - LangGraph SDK for workflows
-- ✅ **`@assistant-ui/react`** (^0.11.15) - AI chat interface components
+| Package                             | Version  | Purpose                                 |
+| ----------------------------------- | -------- | --------------------------------------- |
+| **`@assistant-ui/react`**           | ^0.11.15 | React components for AI chat interfaces |
+| **`@assistant-ui/react-langgraph`** | ^0.6.9   | LangGraph integration for assistant-ui  |
+| **`@assistant-ui/react-markdown`**  | ^0.11.0  | Markdown rendering for chat messages    |
+| **`@langchain/langgraph-sdk`**      | ^0.1.6   | LangGraph SDK for workflows (optional)  |
+
+### Installation Command
+
+```bash
+cd frontend
+npm install ai @ai-sdk/openai langchain @langchain/openai @langchain/core @langchain/community tavily
+```
+
+All packages are already installed in the project! ✅
 
 ## 🔑 Environment Variables
 
-Add these to your `frontend/.env.local`:
+Add these to `frontend/.env.local`:
 
 ```bash
-# Required
-OPENAI_API_KEY=sk-...your-key-here
+# =============================================
+# OPENAI API (REQUIRED)
+# =============================================
+# Get from: https://platform.openai.com/api-keys
+OPENAI_API_KEY=sk-proj-...your-key-here
 
-# Optional (for LangGraph Cloud)
-LANGGRAPH_API_URL=https://...
-LANGCHAIN_API_KEY=...your-key-here
+# =============================================
+# TAVILY API (RECOMMENDED)
+# =============================================
+# Get from: https://tavily.com
+# Free tier: 1,000 requests/month
+# Used for web search in lead enrichment
+TAVILY_API_KEY=tvly-...your-key-here
+
+# =============================================
+# LANGGRAPH CLOUD (OPTIONAL)
+# =============================================
+# Only needed if using LangGraph Cloud
+# Not required for local development or MVP
+LANGGRAPH_API_URL=https://your-deployment.langchain.app
+LANGGRAPH_API_KEY=your-langgraph-key
 ```
 
-## 🧪 Testing the Setup
+## 🏗️ Architecture Overview
 
-### 1. Test All Integrations
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Frontend (Next.js)                   │
+│                                                          │
+│  ┌────────────────┐      ┌────────────────────────┐   │
+│  │  UI Components │      │  AI Assistant Chat     │   │
+│  │  - Dashboard   │      │  (assistant-ui)        │   │
+│  │  - Leads       │      └────────────────────────┘   │
+│  │  - Agents      │                │                   │
+│  └────────────────┘                │                   │
+│         │                           │                   │
+│         └───────────┬───────────────┘                   │
+│                     ▼                                   │
+│         ┌───────────────────────┐                      │
+│         │   API Routes          │                      │
+│         │   /api/leads/enrich   │                      │
+│         │   /api/test-*         │                      │
+│         └───────────────────────┘                      │
+└─────────────────────┼───────────────────────────────────┘
+                      │
+        ┌─────────────┴──────────────┐
+        │                            │
+        ▼                            ▼
+┌───────────────────┐      ┌──────────────────────┐
+│   AI Agents       │      │   External APIs      │
+│                   │      │                      │
+│  Lead Enrichment  │─────▶│  - OpenAI (GPT-4o)   │
+│  - Web Search     │      │  - Tavily (Search)   │
+│  - Analysis       │      │  - Supabase (Data)   │
+│  - Data Update    │      └──────────────────────┘
+└───────────────────┘
+```
+
+## 🤖 Implemented Agents
+
+### 1. Lead Enrichment Agent
+
+**Location**: `frontend/lib/agents/lead-enrichment-agent.ts`
+
+**Purpose**: Automatically research and enrich lead profiles with web data and AI insights.
+
+**Workflow**:
+
+```
+Input: Lead Info
+  ↓
+1. Search Web (Tavily API)
+  ↓
+2. Analyze Results (OpenAI GPT-4o-mini)
+  ↓
+3. Extract Structured Data
+  - Research summary
+  - Pain points
+  - Buying signals
+  - Social URLs
+  ↓
+Output: Enriched Lead Data
+```
+
+**Code Structure**:
+
+```typescript
+// Main entry point
+export async function enrichLead(lead: LeadInput): Promise<EnrichmentResult>;
+
+// Internal steps
+async function searchLeadInfo(lead: LeadInput): Promise<string>;
+async function analyzeLeadData(
+  lead: LeadInput,
+  searchResults: string
+): Promise<EnrichmentResult>;
+```
+
+**API Endpoint**: `POST /api/leads/[id]/enrich`
+
+**Cost**: ~$0.003 per enrichment
+
+- Tavily search: $0.001
+- OpenAI analysis: $0.002
+
+**Documentation**: See [LEAD_ENRICHMENT.md](./LEAD_ENRICHMENT.md)
+
+## 🧪 Testing the AI Setup
+
+### Test Endpoints
+
+| Endpoint           | Purpose                  | Expected Result                           |
+| ------------------ | ------------------------ | ----------------------------------------- |
+| `/api/test-db`     | Test Supabase connection | `{ success: true, tables: [...] }`        |
+| `/api/test-openai` | Test OpenAI API          | `{ success: true, response: "..." }`      |
+| `/api/test-agent`  | Test LangChain agent     | `{ success: true, agentResponse: "..." }` |
+| `/api/test-all`    | Test all integrations    | All tests passing                         |
+
+### Manual Testing
 
 ```bash
+# 1. Test OpenAI directly
+curl http://localhost:3000/api/test-openai | jq .
+
+# 2. Test LangChain agent
+curl http://localhost:3000/api/test-agent | jq .
+
+# 3. Test full integration
 curl http://localhost:3000/api/test-all | jq .
+
+# 4. Test lead enrichment
+curl -X POST http://localhost:3000/api/leads/650e8400-e29b-41d4-a716-446655440002/enrich | jq .
 ```
 
-Expected output:
+### Expected Responses
+
+**Test OpenAI** (`/api/test-openai`):
+
+```json
+{
+  "success": true,
+  "message": "OpenAI test successful",
+  "response": "Hello! I'm an AI assistant...",
+  "model": "gpt-4o-mini",
+  "usage": {
+    "promptTokens": 12,
+    "completionTokens": 20
+  }
+}
+```
+
+**Test All** (`/api/test-all`):
 
 ```json
 {
   "overall": "success",
   "message": "All integrations working!",
   "results": [
-    {
-      "name": "Supabase Connection",
-      "status": "success"
-    },
-    {
-      "name": "OpenAI API Key",
-      "status": "success"
-    },
-    {
-      "name": "Environment Variables",
-      "status": "success"
-    }
+    { "name": "Supabase", "status": "success" },
+    { "name": "OpenAI", "status": "success" },
+    { "name": "LangChain Agent", "status": "success" }
   ]
 }
 ```
 
-### 2. Test OpenAI Direct Connection
+## 🔄 Agent Development Patterns
 
-```bash
-curl http://localhost:3000/api/test-openai | jq .
-```
-
-Expected:
-
-```json
-{
-  "success": true,
-  "message": "OpenAI API connection successful!",
-  "response": "Hello from OpenAI!",
-  "model": "gpt-4o-mini"
-}
-```
-
-### 3. Test LangChain Agent
-
-```bash
-curl http://localhost:3000/api/test-agent | jq .
-```
-
-Expected:
-
-```json
-{
-  "success": true,
-  "message": "LangChain agent test successful!",
-  "agent_response": "I am a helpful CRM assistant...",
-  "model": "gpt-4o-mini"
-}
-```
-
-## 🏗️ Architecture
-
-### Current Setup
-
-```
-┌─────────────────────────────────────────┐
-│         Next.js Frontend                │
-│  (assistant-ui components)              │
-└────────────┬────────────────────────────┘
-             │
-             ├──> /api/chat → LangGraph Cloud (optional)
-             │
-             ├──> /api/test-openai → Direct OpenAI
-             │
-             └──> /api/test-agent → LangChain Agent
-                                    ↓
-                              OpenAI API
-```
-
-### Agent Infrastructure
-
-#### Location: `frontend/lib/agents/`
-
-**`test-agent.ts`** - Simple test agent showing the pattern:
+### Pattern 1: Simple Agent (Lead Enrichment)
 
 ```typescript
-// 1. Initialize model
+// 1. Define input/output types
+interface LeadInput {
+  /* ... */
+}
+interface EnrichmentResult {
+  /* ... */
+}
+
+// 2. Create main function
+export async function enrichLead(lead: LeadInput): Promise<EnrichmentResult> {
+  // 3. Gather data
+  const searchResults = await searchWebForLead(lead);
+
+  // 4. Analyze with LLM
+  const insights = await analyzeWithAI(searchResults);
+
+  // 5. Return structured output
+  return formatEnrichmentResult(insights);
+}
+
+// 6. Create API endpoint
+// POST /api/leads/[id]/enrich
+export async function POST(request: Request) {
+  const enrichment = await enrichLead(leadData);
+  await updateDatabase(enrichment);
+  return Response.json({ success: true, enrichment });
+}
+```
+
+### Pattern 2: Multi-Step Workflow (Future)
+
+```typescript
+// Using LangGraph for complex workflows
+import { StateGraph } from "@langchain/langgraph";
+
+const workflow = new StateGraph({
+  channels: {
+    /* ... */
+  },
+})
+  .addNode("research", researchAgent)
+  .addNode("score", scoringAgent)
+  .addNode("outreach", outreachAgent)
+  .addEdge("research", "score")
+  .addEdge("score", "outreach");
+
+const app = workflow.compile();
+const result = await app.invoke(input);
+```
+
+### Pattern 3: Streaming Responses (AI Assistant)
+
+```typescript
+import { streamText } from "ai";
+import { openai } from "@ai-sdk/openai";
+
+export async function POST(request: Request) {
+  const { messages } = await request.json();
+
+  const result = await streamText({
+    model: openai("gpt-4o-mini"),
+    messages,
+  });
+
+  return result.toDataStreamResponse();
+}
+```
+
+## 🎯 Agent Best Practices
+
+### 1. Error Handling
+
+```typescript
+export async function enrichLead(lead: LeadInput): Promise<EnrichmentResult> {
+  try {
+    const searchResults = await searchWebForLead(lead);
+    return await analyzeWithAI(searchResults);
+  } catch (error) {
+    console.error("Enrichment error:", error);
+
+    // Return graceful fallback
+    return {
+      researchSummary: `Analysis for ${lead.firstName} ${lead.lastName}`,
+      painPoints: [],
+      buyingSignals: [],
+    };
+  }
+}
+```
+
+### 2. Cost Optimization
+
+```typescript
+// Use cheaper model for simple tasks
 const model = new ChatOpenAI({
-  modelName: "gpt-4o-mini",
+  modelName: "gpt-4o-mini", // $0.15/1M tokens vs $2.50/1M for gpt-4
   temperature: 0.7,
 });
 
-// 2. Create prompt template
-const prompt = ChatPromptTemplate.fromMessages([
-  ["system", "You are a helpful CRM assistant."],
-  ["human", "{input}"],
-]);
+// Limit input tokens
+const truncatedInput = searchResults.substring(0, 3000);
 
-// 3. Build chain
-const chain = prompt.pipe(model).pipe(outputParser);
+// Cache repeated queries
+const cache = new Map();
+if (cache.has(leadId)) return cache.get(leadId);
 ```
 
-This pattern will be used for:
-
-- Lead Enrichment Agent
-- Lead Scoring Agent
-- Outreach Content Agent
-- Research Agent
-
-## 🤖 Agent Development
-
-### Creating a New Agent
-
-1. Create agent file: `frontend/lib/agents/your-agent.ts`
+### 3. Structured Output
 
 ```typescript
-import { ChatOpenAI } from "@langchain/openai";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+// Use JSON mode for reliable parsing
+const prompt = `Return your response as JSON:
+{
+  "researchSummary": "...",
+  "painPoints": ["...", "..."],
+  "buyingSignals": ["...", "..."]
+}`;
 
-export async function createYourAgent() {
-  const model = new ChatOpenAI({
-    modelName: "gpt-4o-mini",
-    temperature: 0.7,
-  });
-
-  const prompt = ChatPromptTemplate.fromMessages([
-    ["system", "Your system prompt here"],
-    ["human", "{input}"],
-  ]);
-
-  return prompt.pipe(model);
-}
+const response = await model.invoke(prompt);
+const parsed = JSON.parse(response.content);
 ```
 
-2. Create API endpoint: `frontend/app/api/agents/your-agent/route.ts`
+### 4. Progress Tracking
 
 ```typescript
-import { createYourAgent } from "@/lib/agents/your-agent";
-import { NextResponse } from "next/server";
+// Log to database for monitoring
+await supabase.from("agent_runs").insert({
+  agent_id: "lead-enrichment",
+  status: "running",
+  started_at: new Date(),
+});
 
-export async function POST(req: Request) {
-  const { input } = await req.json();
-  const agent = await createYourAgent();
-  const result = await agent.invoke({ input });
-  return NextResponse.json({ result });
-}
-```
-
-3. Use in components with assistant-ui:
-
-```typescript
-import { useAssistantRuntime } from "@assistant-ui/react";
-
-const runtime = useAssistantRuntime({
-  api: "/api/agents/your-agent",
+// Update on completion
+await supabase.from("agent_runs").update({
+  status: "completed",
+  completed_at: new Date(),
+  tokens_used: usage.totalTokens,
 });
 ```
 
-## 🎯 Next Steps
+## 💰 Cost Management
 
-The infrastructure is now ready for building:
+### Current Usage
 
-1. **Lead Enrichment Agent** (Task 6)
+| Operation       | Model       | Cost per Call | Tokens | Monthly Est (1K leads) |
+| --------------- | ----------- | ------------- | ------ | ---------------------- |
+| Lead Enrichment | GPT-4o-mini | $0.002        | ~1,000 | $2.00                  |
+| Web Search      | Tavily      | $0.001        | -      | $1.00                  |
+| AI Assistant    | GPT-4o-mini | $0.001/msg    | ~500   | Variable               |
+| **Total**       | -           | **$0.003**    | -      | **~$3.00**             |
 
-   - Web search integration
-   - Company data extraction
-   - LinkedIn profile enrichment
+### Cost Optimization Tips
 
-2. **Lead Scoring Agent** (Task 8)
+1. **Use GPT-4o-mini** instead of GPT-4 (10x cheaper)
+2. **Batch operations** when possible
+3. **Cache results** for 24 hours
+4. **Set token limits** on model calls
+5. **Monitor usage** via OpenAI dashboard
 
-   - Rule-based scoring
-   - ML-based scoring (later)
-   - Intent signals detection
+## 🔐 Security Best Practices
 
-3. **Content Generation Agent** (Phase 4)
+### 1. API Key Management
 
-   - Personalized email generation
-   - Follow-up sequences
-   - Social media outreach
+```typescript
+// ✅ DO: Use environment variables
+const apiKey = process.env.OPENAI_API_KEY;
 
-4. **Research Agent**
-   - Company intelligence
-   - Market research
-   - Competitor analysis
+// ❌ DON'T: Hardcode keys
+const apiKey = "sk-proj-..."; // NEVER DO THIS
+```
 
-## 📚 Resources
+### 2. Server-Side Only
 
-- [Vercel AI SDK Docs](https://sdk.vercel.ai/docs)
-- [LangChain Docs](https://js.langchain.com/)
-- [LangGraph Docs](https://langchain-ai.github.io/langgraph/)
-- [assistant-ui Docs](https://www.assistant-ui.com/docs)
-- [OpenAI API Reference](https://platform.openai.com/docs)
+```typescript
+// ✅ DO: Call AI APIs from server
+// app/api/agents/route.ts
+export async function POST(request: Request) {
+  const result = await openai.chat.completions.create({
+    apiKey: process.env.OPENAI_API_KEY, // Safe on server
+    // ...
+  });
+}
 
-## 🔒 Security Best Practices
+// ❌ DON'T: Call from client
+// This would expose your API key!
+```
 
-1. **Never expose API keys client-side**
+### 3. Rate Limiting
 
-   - Use server-side routes for all AI calls
-   - OpenAI key stays in `.env.local` only
+```typescript
+// Implement rate limiting for public endpoints
+import { Ratelimit } from "@upstash/ratelimit";
 
-2. **Rate Limiting**
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(10, "1 m"),
+});
 
-   - Implement rate limits on AI endpoints
-   - Monitor usage and costs
+export async function POST(request: Request) {
+  const { success } = await ratelimit.limit("api");
+  if (!success) {
+    return Response.json({ error: "Rate limit exceeded" }, { status: 429 });
+  }
+  // ...
+}
+```
 
-3. **Input Validation**
+### 4. Input Validation
 
-   - Sanitize all user inputs before sending to AI
-   - Validate response formats
+```typescript
+// Validate and sanitize inputs
+import { z } from "zod";
 
-4. **Cost Management**
-   - Track token usage per request
-   - Set up usage alerts in OpenAI dashboard
-   - Use cheaper models (gpt-4o-mini) for testing
+const LeadInputSchema = z.object({
+  firstName: z.string().min(1).max(100),
+  lastName: z.string().min(1).max(100),
+  email: z.string().email(),
+});
 
-## 💰 Cost Optimization
+export async function POST(request: Request) {
+  const body = await request.json();
+  const validated = LeadInputSchema.parse(body); // Throws if invalid
+  // ...
+}
+```
 
-- **gpt-4o-mini**: $0.15/1M input tokens, $0.60/1M output tokens
-- **gpt-4o**: $5.00/1M input tokens, $15.00/1M output tokens
+## 📊 Monitoring & Observability
 
-For development, use `gpt-4o-mini`. Upgrade to `gpt-4o` only when needed for complex reasoning.
+### LangSmith Integration (Optional)
+
+```bash
+# Add to .env.local
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_API_KEY=your-key
+LANGCHAIN_PROJECT=agentic-crm
+```
+
+### Custom Logging
+
+```typescript
+// Log agent runs to database
+async function logAgentRun(params: AgentRunParams) {
+  await supabase.from("agent_runs").insert({
+    agent_id: params.agentId,
+    status: params.status,
+    input: params.input,
+    output: params.output,
+    tokens_used: params.tokensUsed,
+    cost: params.cost,
+    duration_ms: params.duration,
+    error: params.error,
+  });
+}
+```
+
+## 🚀 Future Enhancements
+
+### Planned Agents
+
+1. **Lead Scoring Agent**
+
+   - Analyze lead data
+   - Predict conversion probability
+   - Auto-update lead scores
+
+2. **Email Outreach Agent**
+
+   - Research lead background
+   - Generate personalized emails
+   - Schedule optimal send times
+
+3. **Meeting Summarization Agent**
+
+   - Transcribe call recordings
+   - Extract action items
+   - Update CRM automatically
+
+4. **Competitive Intelligence Agent**
+   - Monitor competitor mentions
+   - Track industry trends
+   - Alert on opportunities
+
+### LangGraph Workflows
+
+```typescript
+// Multi-agent workflow example
+const workflow = new StateGraph({
+  /* ... */
+})
+  .addNode("research", researchAgent)
+  .addNode("qualify", qualifyAgent)
+  .addNode("outreach", outreachAgent)
+  .addConditionalEdges("qualify", routeByScore)
+  .compile();
+```
+
+## 📚 Additional Resources
+
+- **LangChain Docs**: https://js.langchain.com/
+- **OpenAI Cookbook**: https://cookbook.openai.com/
+- **Tavily Docs**: https://docs.tavily.com/
+- **assistant-ui**: https://assistant-ui.com/docs
+- **Vercel AI SDK**: https://sdk.vercel.ai/
+
+---
+
+**Questions?** Check [LEAD_ENRICHMENT.md](./LEAD_ENRICHMENT.md) for the enrichment agent details or [SETUP_GUIDE.md](./SETUP_GUIDE.md) for setup help.

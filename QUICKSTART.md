@@ -1,17 +1,24 @@
-# 🚀 Quick Start Guide
+# ⚡ Quick Start - Agentic CRM
 
-Get the Agentic CRM up and running in 5 minutes.
+Get up and running in 5 minutes!
 
-## Prerequisites Checklist
+## 🎯 What You'll Get
 
-- [ ] Node.js 18+ installed (`node -v`)
-- [ ] Git installed
-- [ ] Supabase account (free tier)
-- [ ] OpenAI API key
+- ✅ Next.js CRM with AI agents
+- ✅ 3 sample leads with data
+- ✅ AI lead enrichment agent
+- ✅ Interactive AI assistant chatbot
+- ✅ Complete CRM dashboard
 
-## Fast Setup (5 minutes)
+## 📋 Prerequisites
 
-### 1. Clone & Install (1 min)
+- Node.js 18+
+- Supabase account (free)
+- OpenAI API key
+
+## 🚀 Setup Steps
+
+### 1. Clone & Install (2 min)
 
 ```bash
 git clone <your-repo-url>
@@ -19,129 +26,147 @@ cd agentic-crm/frontend
 npm install
 ```
 
-### 2. Set Up Database (2 min)
+### 2. Create Supabase Project (2 min)
 
-**Option A: Join Existing Project**
+1. Go to [supabase.com](https://supabase.com) → **New Project**
+2. Name it `agentic-crm`, choose a password & region
+3. Wait ~2 minutes for it to initialize
 
-- Get credentials from team member
-- Skip to step 3
+### 3. Set Up Database (1 min)
 
-**Option B: Create New Project**
+In Supabase dashboard:
 
-1. Go to [supabase.com](https://supabase.com) → New Project
-2. Name: `agentic-crm`, choose region, save password
-3. Wait 2 minutes for provisioning
-4. Go to SQL Editor → New Query
-5. Copy & paste `/supabase/schema.sql` → Run
-6. Copy & paste `/supabase/rls-policies.sql` → Run
-7. (Optional) Copy & paste `/supabase/seed.sql` → Run
+1. Go to **SQL Editor** → **New query**
+2. Copy/paste contents of `supabase/schema.sql` → **Run**
+3. Repeat with `supabase/seed.sql` → **Run**
+4. Repeat with `supabase/rls-policies.sql` → **Run**
 
-### 3. Configure Environment (1 min)
+✅ You now have 10 tables with sample data!
 
-Get Supabase credentials from: **Settings → API**
+### 4. Configure Environment (1 min)
+
+Create `frontend/.env.local`:
 
 ```bash
-cd frontend
-cp .env.example .env.local
-```
-
-Edit `.env.local`:
-
-```env
+# Get these from Supabase Dashboard → Project Settings → API
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
-OPENAI_API_KEY=sk-...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
+
+# Get from https://platform.openai.com/api-keys
+OPENAI_API_KEY=sk-proj-...
+
+# Optional: Get from https://tavily.com (free tier)
+TAVILY_API_KEY=tvly-...
 ```
 
-### 4. Launch (1 min)
+### 5. Start the App! (30 sec)
 
 ```bash
 npm run dev
 ```
 
-Visit: [http://localhost:3000](http://localhost:3000)
+Visit: **http://localhost:3000** 🎉
 
-Test DB: [http://localhost:3000/api/test-db](http://localhost:3000/api/test-db)
+## 🎮 Try It Out
 
-## Verify Setup ✓
+### View Leads
 
-Should see in Supabase → Table Editor:
+Visit: http://localhost:3000/leads
 
-- ✅ 10 tables created
-- ✅ All showing 🟢 RLS enabled
-- ✅ Sample data loaded (if you ran seed.sql)
+See 3 sample leads: John Doe, Jane Smith, Bob Johnson
 
-Test API should return:
+### Test AI Enrichment
 
-```json
-{
-  "success": true,
-  "message": "Database connection successful!",
-  "tables_accessible": true,
-  "auth_working": true
-}
-```
+1. Click on any lead
+2. Click **"AI Enrich"** button (top right)
+3. Wait ~15 seconds
+4. View results in **Research** tab!
 
-## Common Issues
+**What it does:**
 
-**❌ Database connection failed**
+- Searches web for lead info (or uses mock data without Tavily)
+- AI analyzes and extracts insights
+- Updates lead profile with:
+  - Research summary
+  - Pain points
+  - Buying signals
+  - Social profiles
 
-- Restart Supabase project if paused (Settings → General)
-- Verify `.env.local` has correct URL and keys
-- Check you ran `schema.sql` in SQL Editor
+### Chat with AI Assistant
 
-**❌ Build errors**
+Visit: http://localhost:3000/agents
+
+Ask the AI assistant about your CRM data!
+
+## 🧪 Verify Everything Works
+
+Visit: http://localhost:3000/api/test-all
+
+Should show:
+
+- ✅ Supabase connected
+- ✅ OpenAI working
+- ✅ LangChain agent ready
+
+## 📊 What's Included
+
+| Page             | URL           | What You Can Do                    |
+| ---------------- | ------------- | ---------------------------------- |
+| **Dashboard**    | `/dashboard`  | View overview and metrics          |
+| **Leads List**   | `/leads`      | Browse and filter leads            |
+| **Lead Detail**  | `/leads/[id]` | View profile, enrich, see timeline |
+| **AI Assistant** | `/agents`     | Chat with CRM assistant            |
+| **Workflows**    | `/workflows`  | (Coming soon)                      |
+
+## 🐛 Quick Troubleshooting
+
+### Pages Show 404?
 
 ```bash
-rm -rf .next node_modules
-npm install
-npm run build
+# Restart dev server
+pkill -f "next dev"
+cd frontend && npm run dev
 ```
 
-**❌ RLS policy errors**
+### "Error fetching lead"?
 
-- Verify you ran `rls-policies.sql`
-- Check policies exist: Supabase → Authentication → Policies
-- For server-side ops, use `service_role` key
+- Check `.env.local` has all required vars
+- Restart dev server after adding env vars
+- Verify RLS policies were applied
 
-## Next Steps
+### Enrichment Fails?
 
-1. **Add your OpenAI key** to `.env.local`
-2. **Create a test user**: Supabase → Authentication → Add User
-3. **Start building**: Check `README.md` for detailed docs
+- Check `SUPABASE_SERVICE_ROLE_KEY` is set
+- Verify `OPENAI_API_KEY` is valid
+- Restart dev server
 
-## Quick Commands
+## 📚 Next Steps
 
-```bash
-# Development
-npm run dev              # Start dev server
-npm run build            # Build for production
-npm run lint             # Check code quality
+1. **Explore the code**: Check out `lib/agents/lead-enrichment-agent.ts`
+2. **Read the docs**: [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md) for details
+3. **Learn about enrichment**: [LEAD_ENRICHMENT.md](./docs/LEAD_ENRICHMENT.md)
+4. **Customize**: Modify UI components, add new agents, build workflows
 
-# Database
-# Run in Supabase SQL Editor or use CLI
-supabase link            # Link to project
-supabase db push         # Push migrations
-supabase db pull         # Pull remote schema
-```
+## 💡 Tips
 
-## File Locations
+- **Cost**: ~$0.003 per lead enrichment
+- **Free Tiers**: Supabase, Tavily (1K requests), OpenAI pay-as-you-go
+- **Local Dev**: Everything runs locally, no deployment needed
+- **Sample Data**: 3 leads, 2 companies, activities pre-loaded
 
-- **Environment**: `frontend/.env.local`
-- **Database Schema**: `supabase/schema.sql`
-- **RLS Policies**: `supabase/rls-policies.sql`
-- **Seed Data**: `supabase/seed.sql`
-- **API Test**: `frontend/app/api/test-db/route.ts`
-- **Supabase Utils**: `frontend/lib/supabase/`
+## 🎯 What's Next?
 
-## Getting Help
+**Current Status**: ✅ Tasks 1-6 Complete
 
-- 📖 Full docs: `README.md`
-- 🗂️ PRD: `PRD.txt`
-- 🏗️ Schema: `supabase/schema.sql`
-- 🔧 Tasks: `.taskmaster/tasks/tasks.json`
+**Next Up**:
+
+- Task 7: Firecrawl Integration (web scraping)
+- Task 8: LangGraph Workflows
+- Task 9: Agent Monitoring Dashboard
 
 ---
 
-**Need help?** Check the Troubleshooting section in `README.md`
+**Questions?** Check [README.md](./README.md) or [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md) for detailed info!
+
+**Ready to build!** 🚀

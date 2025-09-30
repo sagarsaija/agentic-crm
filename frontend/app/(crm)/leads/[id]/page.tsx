@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
+import { EnrichButton } from "./enrich-button";
 import {
   Card,
   CardContent,
@@ -23,7 +24,7 @@ import { notFound } from "next/navigation";
 async function getLead(id: string) {
   const supabase = await createClient();
 
-  const { data: lead } = await supabase
+  const { data: lead, error } = await supabase
     .from("leads")
     .select(
       `
@@ -34,7 +35,15 @@ async function getLead(id: string) {
     .eq("id", id)
     .single();
 
-  if (!lead) return null;
+  if (error) {
+    console.error("Error fetching lead:", error);
+    return null;
+  }
+
+  if (!lead) {
+    console.log("No lead found for id:", id);
+    return null;
+  }
 
   // Get activities for this lead
   const { data: activities } = await supabase
@@ -94,6 +103,7 @@ export default async function LeadDetailPage({
             </p>
           </div>
           <div className="flex gap-2">
+            <EnrichButton leadId={lead.id} />
             <Button variant="outline">
               <Edit className="mr-2 h-4 w-4" />
               Edit
