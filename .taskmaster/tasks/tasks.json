@@ -361,7 +361,7 @@
           8,
           9
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -369,7 +369,7 @@
             "description": "Generate realistic demo data for leads, companies, and workflows.",
             "dependencies": [],
             "details": "Develop a dataset that includes various leads, companies, and workflow examples to be used in demo scenarios. Ensure the data is diverse and covers different use cases.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -380,7 +380,7 @@
               "10.1"
             ],
             "details": "Design scenarios that demonstrate autonomous lead discovery, intelligent outreach, and multi-agent workflows. Ensure each scenario effectively showcases the CRM's capabilities.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -391,7 +391,7 @@
               "10.2"
             ],
             "details": "Execute each scenario to verify they run without errors and effectively demonstrate the CRM's features. Make adjustments as needed to enhance clarity and impact.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -399,7 +399,7 @@
     ],
     "metadata": {
       "created": "2025-09-30T21:37:23.141Z",
-      "updated": "2025-10-01T00:05:01.920Z",
+      "updated": "2025-10-01T00:16:43.949Z",
       "description": "Tasks for master context"
     }
   }

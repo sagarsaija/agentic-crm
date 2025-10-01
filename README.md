@@ -74,7 +74,7 @@ The Agentic CRM reimagines customer relationship management by placing AI agents
 | 7. Firecrawl Integration | ✅ Done | Web scraping with company intelligence agent              |
 | 8. LangGraph Workflows   | ✅ Done | Multi-step lead processing workflow with state management |
 | 9. Agent Monitoring      | ✅ Done | Real-time agent activity dashboard with metrics           |
-| 10. Demo Data            | 📝 Next | Comprehensive demo scenarios                              |
+| 10. Demo Data            | ✅ Done | Rich demo data and presentation scenarios                 |
 
 ## 🚀 Quick Start
 
@@ -163,12 +163,20 @@ frontend/
 │   │   ├── leads/               # Leads list and detail pages
 │   │   │   └── [id]/           # Individual lead page
 │   │   │       ├── page.tsx    # Lead detail with tabs
-│   │   │       └── enrich-button.tsx
-│   │   ├── agents/              # AI agents page with chatbot
-│   │   ├── workflows/           # Workflow management
+│   │   │       ├── enrich-button.tsx  # AI enrichment button
+│   │   │       └── workflow-button.tsx  # Workflow automation
+│   │   ├── agents/              # AI assistant chatbot
+│   │   ├── monitor/             # Agent monitoring dashboard
+│   │   │   ├── page.tsx        # Real-time dashboard
+│   │   │   ├── activity-feed.tsx  # Live activity feed
+│   │   │   ├── metrics-charts.tsx  # Performance charts
+│   │   │   └── agent-status-cards.tsx  # Agent controls
+│   │   ├── companies/[id]/      # Company detail pages
 │   │   └── layout.tsx          # Shared sidebar layout
 │   ├── api/                     # API routes
 │   │   ├── leads/[id]/enrich/  # Lead enrichment endpoint
+│   │   ├── workflows/lead-processing/  # Workflow execution
+│   │   ├── companies/[id]/scrape/  # Company scraping
 │   │   └── test-*/             # Testing endpoints
 │   └── page.tsx                # Root (redirects to dashboard)
 ├── components/
@@ -179,6 +187,10 @@ frontend/
 ├── lib/
 │   ├── agents/
 │   │   └── lead-enrichment-agent.ts  # Lead enrichment logic
+│   ├── workflows/
+│   │   └── lead-processing-workflow.ts  # Multi-step workflow
+│   ├── scraping/
+│   │   └── firecrawl-client.ts  # Web scraping client
 │   ├── supabase/
 │   │   ├── client.ts           # Browser Supabase client
 │   │   ├── server.ts           # Server Supabase client
@@ -191,11 +203,18 @@ frontend/
 supabase/
 ├── schema.sql                   # Database table definitions
 ├── seed.sql                    # Sample data
+├── demo-data.sql               # Rich demo data
 └── rls-policies.sql           # Row Level Security policies
 
 docs/
-├── AI_SETUP.md                 # Detailed AI infrastructure setup
-└── LEAD_ENRICHMENT.md         # Lead enrichment agent guide
+├── AI_SETUP.md                 # AI infrastructure setup
+├── LEAD_ENRICHMENT.md         # Lead enrichment agent guide
+├── LANGGRAPH_WORKFLOW.md      # Workflow system guide
+├── FIRECRAWL_INTEGRATION.md   # Web scraping guide
+├── AGENT_MONITORING.md        # Monitoring dashboard guide
+├── DEMO_GUIDE.md              # Presentation scenarios
+├── PROJECT_STATUS.md          # Project status & roadmap
+└── SETUP_GUIDE.md             # Detailed setup guide
 ```
 
 ## 🎮 Usage Guide
@@ -276,6 +295,24 @@ curl -X POST http://localhost:3000/api/workflows/lead-processing \
 - Interactive AI chatbot for CRM operations
 - Powered by assistant-ui with LangGraph integration
 - Ask questions, get insights, and manage leads via chat
+
+### Agent Monitoring Dashboard 🆕
+
+- **URL**: `/monitor`
+- Real-time monitoring of all AI agents
+- Performance metrics and analytics
+- Live activity feed with WebSocket updates
+- Agent controls (pause/resume)
+- Charts showing daily activity and agent performance
+
+**Features**:
+
+- Overview stats (total runs, today, success rate, avg duration)
+- Agent status cards with controls
+- Real-time activity feed
+- Performance visualizations (Recharts)
+
+**Documentation**: See [docs/AGENT_MONITORING.md](docs/AGENT_MONITORING.md)
 
 ## 🗄️ Database Schema
 
