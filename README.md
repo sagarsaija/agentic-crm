@@ -16,9 +16,11 @@ The Agentic CRM reimagines customer relationship management by placing AI agents
 - **🤖 AI Lead Enrichment**: Automatically research and enrich lead profiles with web data
 - **📊 Lead Management**: Track leads through the sales pipeline with status tracking
 - **🎯 Smart Scoring**: AI-powered lead scoring based on engagement and fit
+- **🔄 Automated Workflows**: Multi-step LangGraph workflows for lead processing
+- **🌐 Web Scraping**: Firecrawl-powered company intelligence gathering
 - **💬 AI Assistant**: Interactive chatbot for CRM operations using assistant-ui
 - **📈 Dashboard**: Overview of leads, activities, and agent performance
-- **🔄 Activity Timeline**: Complete history of all interactions and agent actions
+- **⏱️ Activity Timeline**: Complete history of all interactions and agent actions
 - **🔐 Secure Access**: Row Level Security (RLS) with Supabase
 
 ## 🏗️ Tech Stack
@@ -42,7 +44,9 @@ The Agentic CRM reimagines customer relationship management by placing AI agents
 
 - **OpenAI GPT-4o-mini** - Fast, cost-effective LLM for agent operations
 - **LangChain** - LLM application framework
+- **LangGraph** - State-based workflow orchestration (pattern)
 - **Tavily** - AI-optimized search API for web research
+- **Firecrawl** - Intelligent web scraping and data extraction
 - **assistant-ui** - React components for AI chat interfaces
 
 ### DevOps & Tools
@@ -63,14 +67,14 @@ The Agentic CRM reimagines customer relationship management by placing AI agents
 | 5. Build Basic UI             | ✅ Done | Dashboard, Leads List, Lead Detail, Sidebar, Agents page |
 | 6. Lead Enrichment Agent      | ✅ Done | Web search + AI analysis agent with API endpoint         |
 
-### 🚧 Phase 2: Advanced Features (Next)
+### ✅ Phase 2: Advanced Features (Complete!)
 
-| Task                     | Status     | Description                        |
-| ------------------------ | ---------- | ---------------------------------- |
-| 7. Firecrawl Integration | 📝 Pending | Web scraping for lead generation   |
-| 8. LangGraph Workflows   | 📝 Pending | Multi-step agent workflows         |
-| 9. Agent Monitoring      | 📝 Pending | Real-time agent activity dashboard |
-| 10. Demo Data            | 📝 Pending | Comprehensive demo scenarios       |
+| Task                     | Status  | Description                                               |
+| ------------------------ | ------- | --------------------------------------------------------- |
+| 7. Firecrawl Integration | ✅ Done | Web scraping with company intelligence agent              |
+| 8. LangGraph Workflows   | ✅ Done | Multi-step lead processing workflow with state management |
+| 9. Agent Monitoring      | ✅ Done | Real-time agent activity dashboard with metrics           |
+| 10. Demo Data            | 📝 Next | Comprehensive demo scenarios                              |
 
 ## 🚀 Quick Start
 
@@ -211,6 +215,47 @@ docs/
   - **Timeline**: All activities and interactions
   - **Conversations**: Email and message history
   - **Tasks**: Related tasks and follow-ups
+
+### Automated Lead Processing Workflow 🆕
+
+**NEW**: Full pipeline workflow that processes leads through multiple stages automatically!
+
+1. Navigate to any lead detail page
+2. Find the **"Automated Workflow"** card in the sidebar
+3. Click **"Run Processing Workflow"**
+4. Watch the multi-step process (takes ~20-40 seconds):
+   - **Discovery** (0.5s): Validate and fetch lead data
+   - **Enrichment** (15-30s): AI web research and insights
+   - **Scoring** (3-5s): Calculate 0-100 quality score
+   - **Status Update** (0.5s): Auto-assign status based on score
+5. View complete results:
+   - Final lead score (0-100)
+   - New status (qualified/researching/nurturing/new)
+   - Duration and timing for each step
+   - Detailed outputs from each stage
+
+**Scoring Logic**:
+
+- 80-100 → "qualified" (high priority)
+- 60-79 → "researching" (medium priority)
+- 40-59 → "nurturing" (low priority)
+- 0-39 → "new" (needs more data)
+
+**Cost**: ~$0.0054 per workflow run
+
+**Test via API**:
+
+```bash
+# Test with first lead in database
+curl http://localhost:3000/api/workflows/test
+
+# Run for specific lead
+curl -X POST http://localhost:3000/api/workflows/lead-processing \
+  -H "Content-Type: application/json" \
+  -d '{"leadId": "YOUR_LEAD_ID"}'
+```
+
+**Documentation**: See [docs/LANGGRAPH_WORKFLOW.md](docs/LANGGRAPH_WORKFLOW.md) for complete details.
 
 ### AI Lead Enrichment
 

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
 import { EnrichButton } from "./enrich-button";
+import { WorkflowButton } from "./workflow-button";
 import {
   Card,
   CardContent,
@@ -343,6 +344,19 @@ export default async function LeadDetailPage({
 
         {/* Sidebar */}
         <div className="space-y-4">
+          {/* Workflow Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Automated Workflow</CardTitle>
+              <CardDescription>
+                Run full lead processing pipeline
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <WorkflowButton leadId={lead.id} />
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Quick Stats</CardTitle>

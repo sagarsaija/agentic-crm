@@ -9,6 +9,7 @@ import {
   Bot,
   Settings,
   Database,
+  Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +17,8 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Leads", href: "/leads", icon: Users },
   { name: "Workflows", href: "/workflows", icon: Workflow },
-  { name: "Agents", href: "/agents", icon: Bot },
+  { name: "AI Assistant", href: "/agents", icon: Bot },
+  { name: "Agent Monitor", href: "/monitor", icon: Activity },
   { name: "Data", href: "/data", icon: Database },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
