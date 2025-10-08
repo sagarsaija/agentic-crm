@@ -395,11 +395,1350 @@
             "testStrategy": ""
           }
         ]
+      },
+      {
+        "id": 11,
+        "title": "Build Chat UI Infrastructure",
+        "description": "Develop the foundational chat interface using assistant-ui components, including a sidebar, message display, input field, and more.",
+        "details": "To build the Chat UI Infrastructure, start by creating a chat sidebar or panel component that can be toggled open and closed. Use assistant-ui components to ensure consistency with the existing UI framework. Implement a message history display that shows both user and assistant messages, supporting markdown and code block formatting. Include an input field with a send button for user interaction. Ensure the chat interface supports streaming responses from the assistant, displaying messages as they are received. Implement loading states to indicate when messages are being processed and error handling to manage any issues that arise during message transmission. Integrate this chat interface with the existing MyAssistant component to ensure seamless functionality within the application.",
+        "testStrategy": "Verify the chat sidebar can be toggled open and closed. Test the message history display by sending and receiving messages, ensuring correct formatting for markdown and code blocks. Check the input field and send button for responsiveness and correct message transmission. Simulate streaming responses to ensure messages appear in real-time. Test loading states by simulating delays in message processing and verify error handling by introducing errors in message transmission. Ensure the chat interface integrates smoothly with the MyAssistant component by testing end-to-end message flows.",
+        "status": "pending",
+        "dependencies": [
+          2,
+          3
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Chat Sidebar Component",
+            "description": "Develop a chat sidebar or panel component that can be toggled open and closed using assistant-ui components.",
+            "dependencies": [],
+            "details": "Ensure the sidebar integrates seamlessly with the existing UI framework and can be toggled open and closed by the user.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Message History Display",
+            "description": "Develop the message history display to show both user and assistant messages with markdown and code block formatting.",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "Use ThreadPrimitive.Messages and ThreadPrimitive.Viewport for displaying messages. Ensure proper thread state management.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Develop Input Field with Send Button",
+            "description": "Create an input field with a send button for user interaction.",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "Ensure the input field is responsive and correctly transmits messages when the send button is clicked.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Integrate Streaming Responses",
+            "description": "Ensure the chat interface supports streaming responses from the assistant, displaying messages as they are received.",
+            "dependencies": [
+              "11.2",
+              "11.3"
+            ],
+            "details": "Implement real-time message updates to enhance user experience.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Loading States",
+            "description": "Develop loading states to indicate when messages are being processed.",
+            "dependencies": [
+              "11.4"
+            ],
+            "details": "Provide visual feedback to users while messages are being processed.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Design Error Handling Strategies",
+            "description": "Implement error handling to manage issues during message transmission.",
+            "dependencies": [
+              "11.5"
+            ],
+            "details": "Ensure robust error handling to maintain application stability and provide user feedback.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Integrate Chat Interface with MyAssistant Component",
+            "description": "Integrate the developed chat interface with the existing MyAssistant component for seamless functionality.",
+            "dependencies": [
+              "11.6"
+            ],
+            "details": "Ensure the chat interface works smoothly within the application and leverages existing MyAssistant functionalities.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Implement Natural Language CRM Queries",
+        "description": "Enable the chat assistant to handle natural language database queries by converting them into Supabase queries and displaying results.",
+        "details": "To implement natural language CRM queries, first integrate a natural language processing (NLP) library such as OpenAI's GPT or a similar model to parse user queries. Develop a parser that can interpret queries like \"Show me all tech leads from Bay Area with >50 employees\" and convert them into SQL queries compatible with Supabase. Ensure the parser supports filtering by industry, location, company size, status, and lead score. Implement a mechanism to display results in formatted tables or cards within the chat interface, utilizing the chat UI infrastructure. Handle pagination for large result sets by implementing a strategy to fetch and display data in chunks. Additionally, support follow-up refinement queries by maintaining context of the previous queries and results. Ensure the system is scalable and can handle multiple concurrent queries efficiently.",
+        "testStrategy": "Test the implementation by inputting various natural language queries and verifying that they are correctly parsed into SQL queries. Check that the results are accurately retrieved from the database and displayed in the chat interface. Validate the formatting of results in tables or cards, and ensure pagination works smoothly for large datasets. Test follow-up queries to confirm that the system maintains context and refines results as expected. Perform load testing to ensure the system can handle multiple queries simultaneously without performance degradation.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP Library",
+            "description": "Integrate a natural language processing library such as OpenAI's GPT to parse user queries.",
+            "dependencies": [],
+            "details": "Select and integrate an NLP library capable of understanding and parsing natural language queries.",
+            "status": "pending",
+            "testStrategy": "Test the integration by inputting sample queries and verifying that they are correctly parsed into structured data."
+          },
+          {
+            "id": 2,
+            "title": "Develop Query Parser",
+            "description": "Develop a parser to convert natural language queries into SQL queries compatible with Supabase.",
+            "dependencies": [
+              "12.1"
+            ],
+            "details": "Create a parser that interprets user queries and translates them into SQL queries, supporting filters like industry, location, and company size.",
+            "status": "pending",
+            "testStrategy": "Test the parser by inputting various queries and verifying the accuracy of the generated SQL queries."
+          },
+          {
+            "id": 3,
+            "title": "Implement Result Display Mechanism",
+            "description": "Implement a mechanism to display query results in formatted tables or cards within the chat interface.",
+            "dependencies": [
+              "12.2"
+            ],
+            "details": "Utilize the chat UI infrastructure to format and display results, ensuring clarity and usability.",
+            "status": "pending",
+            "testStrategy": "Verify that results are displayed correctly in the chat interface, checking for formatting and usability."
+          },
+          {
+            "id": 4,
+            "title": "Handle Pagination for Large Result Sets",
+            "description": "Implement a strategy to fetch and display data in chunks for large result sets.",
+            "dependencies": [
+              "12.3"
+            ],
+            "details": "Develop a pagination mechanism to efficiently handle and display large sets of data in the chat interface.",
+            "status": "pending",
+            "testStrategy": "Test the pagination by querying large datasets and ensuring data is fetched and displayed in manageable chunks."
+          },
+          {
+            "id": 5,
+            "title": "Support Follow-up Refinement Queries",
+            "description": "Enable the system to maintain context for follow-up queries and refine results based on previous interactions.",
+            "dependencies": [
+              "12.4"
+            ],
+            "details": "Implement context management to track previous queries and results, allowing users to refine their searches.",
+            "status": "pending",
+            "testStrategy": "Test the context management by conducting follow-up queries and verifying that the system maintains context accurately."
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Implement Lead and Company Lookup via Chat",
+        "description": "Enable users to perform quick lookups of leads and companies through chat queries, providing detailed information and actions.",
+        "details": "To implement the Lead and Company Lookup feature, integrate with the existing chat interface to handle specific query patterns such as 'Tell me about [Company]' or 'What's the status of [Lead Email]'. Utilize the natural language processing capabilities developed in Task 12 to parse these queries and convert them into database queries. Fetch relevant data from the CRM database, including company details, lead information, recent activities, and related records. Format the response to highlight key information and include interactive elements such as quick action buttons for 'Enrich', 'Update Status', and 'View Full Profile'. Ensure the system can display related records, such as other leads at the same company or similar companies, to provide comprehensive insights. Consider using a combination of Supabase queries and in-memory data processing to efficiently gather and present the required information.",
+        "testStrategy": "Test the feature by inputting various lookup queries in the chat interface and verifying that the correct information is retrieved and displayed. Check that the responses are formatted correctly with key information highlighted and that quick action buttons function as expected. Validate that related records are accurately identified and presented. Conduct user testing to ensure the feature is intuitive and meets user needs.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11,
+          12
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate Chat Interface for Query Handling",
+            "description": "Integrate the existing chat interface to handle specific query patterns for lead and company lookups.",
+            "dependencies": [],
+            "details": "Modify the chat interface to recognize and process queries like 'Tell me about [Company]' or 'What's the status of [Lead Email]'. Ensure the interface can pass these queries to the NLP system.",
+            "status": "pending",
+            "testStrategy": "Test by inputting various query patterns in the chat interface and verify that they are correctly identified and processed."
+          },
+          {
+            "id": 2,
+            "title": "Utilize NLP for Query Parsing",
+            "description": "Use NLP capabilities to parse chat queries and convert them into database queries.",
+            "dependencies": [
+              "13.1"
+            ],
+            "details": "Leverage the NLP system developed in Task 12 to interpret user queries and translate them into structured database queries for lead and company information retrieval.",
+            "status": "pending",
+            "testStrategy": "Test the NLP parsing by checking the accuracy of database queries generated from a variety of chat inputs."
+          },
+          {
+            "id": 3,
+            "title": "Fetch Data from CRM Database",
+            "description": "Retrieve relevant data from the CRM database based on parsed queries.",
+            "dependencies": [
+              "13.2"
+            ],
+            "details": "Implement database queries to fetch company details, lead information, recent activities, and related records from the CRM system.",
+            "status": "pending",
+            "testStrategy": "Verify that the correct data is retrieved from the CRM database for a range of test queries."
+          },
+          {
+            "id": 4,
+            "title": "Format and Display Response",
+            "description": "Format the response to highlight key information and include interactive elements.",
+            "dependencies": [
+              "13.3"
+            ],
+            "details": "Design the response format to emphasize important data and integrate quick action buttons like 'Enrich', 'Update Status', and 'View Full Profile'.",
+            "status": "pending",
+            "testStrategy": "Check that responses are correctly formatted and interactive elements function as expected in the chat interface."
+          },
+          {
+            "id": 5,
+            "title": "Implement Related Records Display",
+            "description": "Ensure the system can display related records for comprehensive insights.",
+            "dependencies": [
+              "13.4"
+            ],
+            "details": "Develop functionality to show related leads at the same company or similar companies, using a combination of Supabase queries and in-memory data processing.",
+            "status": "pending",
+            "testStrategy": "Test the display of related records by verifying that relevant connections are shown for various lead and company queries."
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Implement CRUD Operations via Chat",
+        "description": "Enable users to perform CRUD operations on CRM records through natural language commands in the chat interface.",
+        "details": "To implement CRUD operations via chat, integrate natural language processing (NLP) capabilities to interpret user commands such as creating, updating, and modifying records. Use a library like OpenAI's GPT to parse commands and convert them into appropriate database operations using Supabase. Implement specific handlers for each type of operation: creation, updates, and deletions. Ensure that confirmation prompts are shown for destructive actions like deletions, and provide success feedback with links to updated records. For bulk operations, ensure the system can handle multiple records efficiently. Integrate these functionalities into the existing chat UI developed in Task 11, leveraging the natural language parsing capabilities from Task 12.",
+        "testStrategy": "Test the CRUD operations by inputting various natural language commands in the chat interface. Verify that each command is correctly parsed and executed, resulting in the appropriate database changes. Check that confirmation prompts appear for destructive actions and that success messages include links to the updated records. Test bulk operations to ensure they are processed correctly and efficiently. Validate that the chat interface remains responsive and that feedback is clear and informative.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11,
+          12
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Command Parsing",
+            "description": "Integrate natural language processing capabilities to interpret user commands for CRUD operations.",
+            "dependencies": [],
+            "details": "Use OpenAI's GPT to parse natural language commands and convert them into structured database operations.",
+            "status": "pending",
+            "testStrategy": "Test by inputting various CRUD commands and verifying correct parsing into database operations."
+          },
+          {
+            "id": 2,
+            "title": "Develop Handlers for CRUD Operations",
+            "description": "Implement specific handlers for creating, updating, and deleting CRM records based on parsed commands.",
+            "dependencies": [
+              "14.1"
+            ],
+            "details": "Create handlers that execute database operations using Supabase for each CRUD action.",
+            "status": "pending",
+            "testStrategy": "Verify that each handler correctly executes the intended database operation for various command inputs."
+          },
+          {
+            "id": 3,
+            "title": "Implement Confirmation Prompts",
+            "description": "Ensure confirmation prompts are shown for destructive actions like deletions.",
+            "dependencies": [
+              "14.2"
+            ],
+            "details": "Develop a system to prompt users for confirmation before executing delete operations.",
+            "status": "pending",
+            "testStrategy": "Test by attempting deletions and verifying that confirmation prompts appear before action execution."
+          },
+          {
+            "id": 4,
+            "title": "Provide Success Feedback",
+            "description": "Provide users with success feedback and links to updated records after operations.",
+            "dependencies": [
+              "14.2"
+            ],
+            "details": "Implement feedback messages that confirm successful operations and include links to affected records.",
+            "status": "pending",
+            "testStrategy": "Check that success messages are displayed with correct links after each CRUD operation."
+          },
+          {
+            "id": 5,
+            "title": "Optimize for Bulk Operations",
+            "description": "Ensure the system can handle bulk operations efficiently.",
+            "dependencies": [
+              "14.2"
+            ],
+            "details": "Enhance the system to process multiple records in a single command efficiently.",
+            "status": "pending",
+            "testStrategy": "Test by executing bulk operations and verifying system performance and accuracy."
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Implement Agent Control via Chat",
+        "description": "Enable users to trigger and control AI agents through chat commands, providing real-time updates and management capabilities.",
+        "details": "To implement agent control via chat, integrate natural language processing (NLP) capabilities to interpret specific commands such as 'Enrich all pending leads', 'Run enrichment on Acme Corp', and 'Process these 5 leads through qualification workflow'. Use OpenAI's GPT for command parsing and LangGraph for agent orchestration. Develop a chat interface that displays real-time progress updates, agent status, and current tasks using the chat UI infrastructure. Implement functionality to cancel running agents and show a results summary upon completion. Ensure seamless integration with existing chat features and workflows.",
+        "testStrategy": "Test the agent control feature by inputting various chat commands and verifying that agents are triggered correctly. Check real-time progress updates and agent status displays in the chat interface. Test the cancel functionality to ensure agents can be stopped as expected. Validate that a results summary is shown upon task completion, and ensure all interactions are logged correctly.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11,
+          12,
+          6
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Command Parsing",
+            "description": "Develop and integrate natural language processing capabilities to interpret specific chat commands.",
+            "dependencies": [],
+            "details": "Use OpenAI's GPT to parse commands such as 'Enrich all pending leads' and 'Run enrichment on Acme Corp'.",
+            "status": "pending",
+            "testStrategy": "Test the NLP integration by inputting various commands and verifying correct interpretation and parsing."
+          },
+          {
+            "id": 2,
+            "title": "Develop Chat Interface for Real-Time Updates",
+            "description": "Create a chat interface that displays real-time progress updates, agent status, and current tasks.",
+            "dependencies": [
+              "15.1"
+            ],
+            "details": "Utilize the existing chat UI infrastructure to show updates and statuses of running agents.",
+            "status": "pending",
+            "testStrategy": "Verify that the chat interface correctly displays real-time updates and statuses for various agent tasks."
+          },
+          {
+            "id": 3,
+            "title": "Implement Agent Orchestration with LangGraph",
+            "description": "Integrate LangGraph for orchestrating AI agents based on parsed commands.",
+            "dependencies": [
+              "15.1"
+            ],
+            "details": "Ensure seamless orchestration of agents to perform tasks as specified by user commands.",
+            "status": "pending",
+            "testStrategy": "Test the orchestration by triggering agents with parsed commands and observing correct task execution."
+          },
+          {
+            "id": 4,
+            "title": "Develop Cancel Functionality for Running Agents",
+            "description": "Implement functionality to cancel running agents through chat commands.",
+            "dependencies": [
+              "15.2",
+              "15.3"
+            ],
+            "details": "Allow users to stop agents mid-task and ensure that the system handles cancellations gracefully.",
+            "status": "pending",
+            "testStrategy": "Test the cancel functionality by issuing cancel commands and verifying that agents stop as expected."
+          },
+          {
+            "id": 5,
+            "title": "Implement Results Summary Display",
+            "description": "Create a feature to show a summary of results upon task completion in the chat interface.",
+            "dependencies": [
+              "15.2",
+              "15.3"
+            ],
+            "details": "Display a concise summary of completed tasks and their outcomes in the chat interface.",
+            "status": "pending",
+            "testStrategy": "Verify that the results summary is accurate and displayed correctly after task completion."
+          }
+        ]
+      },
+      {
+        "id": 16,
+        "title": "Implement Agent Status and History Queries via Chat",
+        "description": "Enable users to query agent status and history through chat commands, providing insights into current activities, past actions, and performance metrics.",
+        "details": "To implement agent status and history queries, integrate natural language processing (NLP) capabilities to interpret user queries related to agent activities. Use OpenAI's GPT for parsing commands such as 'What are the agents working on right now?', 'Show me what the enrichment agent did in the last hour', and 'Agent performance this week'. Develop a backend service that interfaces with the agent monitoring dashboard (Task 9) to fetch real-time data on active tasks, historical logs, and performance metrics. Ensure the service can display execution history with timestamps, success/failure rates, and provide links to the detailed monitoring dashboard for further analysis. Implement the chat interface to handle these queries and display results in a user-friendly format, using the chat UI infrastructure developed in Task 11.",
+        "testStrategy": "Test the feature by inputting various agent-related queries in the chat interface and verifying that the correct information is retrieved and displayed. Ensure that active tasks, historical logs, and performance metrics are accurately reflected. Validate the formatting of results and the functionality of links to the monitoring dashboard. Check that the system handles edge cases, such as no recent activity, gracefully.",
+        "status": "pending",
+        "dependencies": [
+          9,
+          11,
+          12
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Query Interpretation",
+            "description": "Develop and integrate natural language processing capabilities to interpret user queries related to agent activities.",
+            "dependencies": [],
+            "details": "Use OpenAI's GPT to parse commands such as 'What are the agents working on right now?' and 'Show me what the enrichment agent did in the last hour'.",
+            "status": "pending",
+            "testStrategy": "Test by inputting various agent-related queries and verifying correct interpretation and parsing."
+          },
+          {
+            "id": 2,
+            "title": "Develop Backend Service for Data Retrieval",
+            "description": "Create a backend service that interfaces with the agent monitoring dashboard to fetch real-time data on active tasks, historical logs, and performance metrics.",
+            "dependencies": [
+              "16.1"
+            ],
+            "details": "Ensure the service can access and retrieve data from the agent monitoring dashboard (Task 9) and provide execution history with timestamps.",
+            "status": "pending",
+            "testStrategy": "Verify data retrieval accuracy by comparing fetched data with the monitoring dashboard."
+          },
+          {
+            "id": 3,
+            "title": "Implement Chat Interface for Query Handling",
+            "description": "Develop the chat interface to handle agent status and history queries and display results in a user-friendly format.",
+            "dependencies": [
+              "16.1",
+              "16.2"
+            ],
+            "details": "Utilize the chat UI infrastructure developed in Task 11 to present query results effectively.",
+            "status": "pending",
+            "testStrategy": "Test the interface by executing queries and ensuring results are displayed correctly and intuitively."
+          },
+          {
+            "id": 4,
+            "title": "Integrate Performance Metrics Display",
+            "description": "Ensure the service can display agent performance metrics, including success/failure rates and links to detailed dashboards.",
+            "dependencies": [
+              "16.2"
+            ],
+            "details": "Provide links to the detailed monitoring dashboard for further analysis of performance metrics.",
+            "status": "pending",
+            "testStrategy": "Validate the accuracy and completeness of performance metrics displayed in the chat interface."
+          },
+          {
+            "id": 5,
+            "title": "Test and Validate Query System",
+            "description": "Conduct comprehensive testing of the entire query system to ensure accurate data retrieval and display.",
+            "dependencies": [
+              "16.3",
+              "16.4"
+            ],
+            "details": "Test with various queries to ensure active tasks, historical logs, and performance metrics are accurately reflected.",
+            "status": "pending",
+            "testStrategy": "Input diverse queries and verify that the system retrieves and displays the correct information consistently."
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Implement Smart Analysis and Insights",
+        "description": "Develop analytical capabilities within the chat assistant to perform metric calculations, trend analysis, and generate visual insights.",
+        "details": "To implement Smart Analysis and Insights, integrate advanced natural language processing (NLP) capabilities to interpret user queries related to analytics, such as conversion rates, industry trends, lead scoring explanations, and pipeline velocity. Use OpenAI's GPT for parsing complex queries and generating insights. Implement a backend service that interfaces with the CRM database to calculate metrics and perform trend analysis. Utilize a data visualization library like Chart.js or D3.js to generate inline charts and visualizations within the chat interface. Ensure the system can compare metrics across different time periods and export analysis results in common formats like CSV or PDF. Consider implementing caching strategies to optimize performance for frequently requested data. Ensure the chat interface supports interactive elements for exploring data insights.",
+        "testStrategy": "Test the analytical capabilities by inputting various natural language queries and verifying that the correct metrics and insights are calculated and displayed. Validate the accuracy of trend analyses and lead scoring explanations. Check that visualizations are generated correctly and are interactive. Test the export functionality by exporting analysis results in different formats and verifying the integrity of the exported data. Ensure performance is optimized for repeated queries.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11,
+          12
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Query Interpretation",
+            "description": "Develop and integrate advanced NLP capabilities to interpret user queries related to analytics.",
+            "dependencies": [],
+            "details": "Use OpenAI's GPT to parse complex queries and generate insights related to conversion rates, industry trends, lead scoring explanations, and pipeline velocity.",
+            "status": "pending",
+            "testStrategy": "Test the NLP integration by inputting various natural language queries and verifying that the correct metrics and insights are interpreted and generated."
+          },
+          {
+            "id": 2,
+            "title": "Develop Backend Service for Metric Calculations",
+            "description": "Implement a backend service that interfaces with the CRM database to calculate metrics and perform trend analysis.",
+            "dependencies": [
+              "17.1"
+            ],
+            "details": "Ensure the backend can calculate metrics, perform trend analysis, and compare metrics across different time periods.",
+            "status": "pending",
+            "testStrategy": "Validate the accuracy of metric calculations and trend analyses by comparing results with expected outcomes."
+          },
+          {
+            "id": 3,
+            "title": "Implement Data Visualization",
+            "description": "Utilize a data visualization library to generate inline charts and visualizations within the chat interface.",
+            "dependencies": [
+              "17.2"
+            ],
+            "details": "Use libraries like Chart.js or D3.js to create visual insights that are interactive and can be exported in formats like CSV or PDF.",
+            "status": "pending",
+            "testStrategy": "Check that visualizations are generated correctly, are interactive, and can be exported in the specified formats."
+          },
+          {
+            "id": 4,
+            "title": "Optimize Performance with Caching Strategies",
+            "description": "Implement caching strategies to optimize performance for frequently requested data.",
+            "dependencies": [
+              "17.2"
+            ],
+            "details": "Develop a caching mechanism to store frequently accessed data, reducing load times and improving system responsiveness.",
+            "status": "pending",
+            "testStrategy": "Test the caching system by measuring performance improvements and ensuring data consistency across cached and non-cached queries."
+          },
+          {
+            "id": 5,
+            "title": "Enhance Chat Interface for Interactive Data Exploration",
+            "description": "Ensure the chat interface supports interactive elements for exploring data insights.",
+            "dependencies": [
+              "17.3"
+            ],
+            "details": "Integrate interactive elements within the chat interface to allow users to explore data insights dynamically.",
+            "status": "pending",
+            "testStrategy": "Verify that users can interact with data insights within the chat interface and that the interactions provide meaningful and accurate feedback."
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "title": "Implement Smart Recommendations",
+        "description": "Develop proactive recommendation capabilities for the assistant to prioritize leads, identify high-value prospects, detect at-risk leads, and suggest next actions.",
+        "details": "To implement Smart Recommendations, integrate machine learning models capable of analyzing lead data to generate prioritized lists and contextual suggestions. Use a combination of lead scoring algorithms, engagement metrics, and historical data analysis to determine lead priorities and risks. Implement a feedback loop to learn from user actions and improve recommendation accuracy over time. Utilize explainable AI techniques to provide users with insights into the reasoning behind each recommendation. Consider using libraries such as TensorFlow or PyTorch for model training and inference, and integrate with the existing chat interface to deliver recommendations in a user-friendly manner.",
+        "testStrategy": "Test the recommendation system by simulating various lead scenarios and verifying that the recommendations align with expected outcomes based on lead scores, engagement levels, and historical data. Validate the system's ability to learn from user interactions and improve over time. Ensure that the explanations provided for recommendations are clear and accurate. Conduct user testing to gather feedback on the relevance and usefulness of the recommendations.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11,
+          12
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Recommendation Framework",
+            "description": "Create a framework for integrating machine learning models to analyze lead data and generate recommendations.",
+            "dependencies": [],
+            "details": "Outline the architecture for the recommendation system, including data flow and model integration points. Define the criteria for lead scoring and prioritization.",
+            "status": "pending",
+            "testStrategy": "Review the framework design with stakeholders to ensure it meets business requirements and technical feasibility."
+          },
+          {
+            "id": 2,
+            "title": "Develop Lead Scoring Algorithms",
+            "description": "Implement algorithms to score leads based on engagement metrics and historical data.",
+            "dependencies": [
+              "18.1"
+            ],
+            "details": "Use machine learning techniques to develop algorithms that evaluate lead engagement and historical interactions to assign scores.",
+            "status": "pending",
+            "testStrategy": "Simulate lead scenarios and verify that the scoring aligns with expected outcomes based on predefined criteria."
+          },
+          {
+            "id": 3,
+            "title": "Integrate Machine Learning Models",
+            "description": "Integrate machine learning models using TensorFlow or PyTorch for lead analysis and recommendation generation.",
+            "dependencies": [
+              "18.1",
+              "18.2"
+            ],
+            "details": "Select appropriate models and train them using historical lead data. Ensure models can generate prioritized lists and contextual suggestions.",
+            "status": "pending",
+            "testStrategy": "Validate model performance by comparing generated recommendations against historical outcomes and expert evaluations."
+          },
+          {
+            "id": 4,
+            "title": "Implement Feedback Loop",
+            "description": "Develop a feedback mechanism to learn from user actions and improve recommendation accuracy.",
+            "dependencies": [
+              "18.3"
+            ],
+            "details": "Create a system to capture user interactions with recommendations and adjust model parameters to enhance accuracy over time.",
+            "status": "pending",
+            "testStrategy": "Monitor feedback loop effectiveness by tracking recommendation accuracy improvements over multiple iterations."
+          },
+          {
+            "id": 5,
+            "title": "Utilize Explainable AI Techniques",
+            "description": "Incorporate explainable AI methods to provide insights into recommendation reasoning.",
+            "dependencies": [
+              "18.3"
+            ],
+            "details": "Implement techniques that allow users to understand the factors influencing each recommendation, enhancing transparency and trust.",
+            "status": "pending",
+            "testStrategy": "Conduct user testing to ensure explanations are clear and informative, and adjust based on feedback to improve user comprehension."
+          }
+        ]
+      },
+      {
+        "id": 19,
+        "title": "Implement Batch Operations via Chat Commands",
+        "description": "Enable batch operations through chat commands, including enrichment, updates, exports, and job management.",
+        "details": "To implement batch operations, integrate natural language processing (NLP) capabilities to interpret batch commands such as 'Enrich all tech companies added this week', 'Update status to qualified for all hot leads', and 'Export all SaaS leads to CSV'. Use OpenAI's GPT for command parsing and LangGraph for orchestrating batch processes. Implement a backend service to handle batch job execution, including progress tracking, pausing, and resuming capabilities. Use a job queue system like Bull or RabbitMQ to manage long-running tasks and ensure scalability. Implement progress bars in the chat UI to provide real-time feedback on batch operations. Develop error handling mechanisms to retry failed operations and summarize results with counts of successful, failed, and skipped items. Ensure that the chat interface supports these operations by displaying progress and results in a user-friendly format.",
+        "testStrategy": "Test the batch operations by inputting various batch commands in the chat interface and verifying that the operations are executed correctly. Check that progress bars are displayed and updated in real-time. Test the pause and resume functionality to ensure batch jobs can be managed effectively. Validate error handling by simulating failures and ensuring retries are attempted. Verify that the summary of results is accurate and displayed correctly in the chat interface.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11,
+          12,
+          15
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Command Parsing",
+            "description": "Integrate OpenAI's GPT to interpret batch commands for operations like enrichment, updates, and exports.",
+            "dependencies": [],
+            "details": "Use OpenAI's GPT to parse natural language batch commands and convert them into actionable tasks.",
+            "status": "pending",
+            "testStrategy": "Test various batch commands in the chat interface to ensure accurate parsing and task conversion."
+          },
+          {
+            "id": 2,
+            "title": "Develop Backend Service for Batch Execution",
+            "description": "Implement a backend service to handle batch job execution with progress tracking, pausing, and resuming capabilities.",
+            "dependencies": [
+              "19.1"
+            ],
+            "details": "Create a service that manages batch operations, tracks progress, and allows pausing and resuming of jobs.",
+            "status": "pending",
+            "testStrategy": "Verify that batch jobs can be executed, paused, and resumed, with progress tracked accurately."
+          },
+          {
+            "id": 3,
+            "title": "Implement Job Queue System",
+            "description": "Use a job queue system like Bull or RabbitMQ to manage long-running tasks and ensure scalability.",
+            "dependencies": [
+              "19.2"
+            ],
+            "details": "Integrate a job queue system to handle task distribution and execution for batch operations.",
+            "status": "pending",
+            "testStrategy": "Test the job queue system by simulating multiple batch operations and ensuring efficient task management."
+          },
+          {
+            "id": 4,
+            "title": "Design Chat UI for Real-Time Feedback",
+            "description": "Implement progress bars and feedback mechanisms in the chat UI for batch operations.",
+            "dependencies": [
+              "19.2"
+            ],
+            "details": "Enhance the chat interface to display real-time progress and results of batch operations.",
+            "status": "pending",
+            "testStrategy": "Check that progress bars update in real-time and results are displayed clearly in the chat interface."
+          },
+          {
+            "id": 5,
+            "title": "Develop Error Handling and Result Summarization",
+            "description": "Implement error handling to retry failed operations and summarize results with counts of successful, failed, and skipped items.",
+            "dependencies": [
+              "19.2"
+            ],
+            "details": "Create mechanisms to handle errors during batch operations and provide a summary of the operation results.",
+            "status": "pending",
+            "testStrategy": "Test error scenarios to ensure retries are attempted and results are summarized accurately."
+          }
+        ]
+      },
+      {
+        "id": 20,
+        "title": "Implement Web Research Capabilities with Firecrawl",
+        "description": "Integrate Firecrawl to enable real-time web research through chat, allowing users to gather and save information about companies, news, and contacts.",
+        "details": "To implement web research capabilities, integrate Firecrawl with the existing CRM system to perform real-time web scraping and data gathering. Use Firecrawl's API to execute queries such as 'Research this company and find their tech stack', 'Find recent news about Acme Corp', and 'What's the company's LinkedIn presence?'. Implement intelligent prospecting to find contact information for decision makers. Ensure that all research results are displayed with their sources and automatically saved to relevant company or lead records. Handle API rate limits and quotas by implementing a queue system to manage requests efficiently. Use OpenAI's GPT for natural language processing to interpret user queries and trigger appropriate Firecrawl actions. Ensure compliance with web scraping policies and legal requirements.",
+        "testStrategy": "Test the integration by inputting various research queries in the chat interface and verifying that Firecrawl correctly scrapes and returns the desired data. Check that the results are displayed with sources and automatically saved to the appropriate records in the CRM. Simulate high-volume requests to ensure that rate limiting and quota handling are functioning correctly. Validate that the system adheres to web scraping policies and legal standards.",
+        "status": "pending",
+        "dependencies": [
+          6,
+          7,
+          11
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate Firecrawl API with CRM System",
+            "description": "Set up the Firecrawl API within the existing CRM system to enable web scraping and data gathering.",
+            "dependencies": [],
+            "details": "Establish a connection between the CRM and Firecrawl API to facilitate data retrieval for company research, news updates, and contact information.",
+            "status": "pending",
+            "testStrategy": "Verify API connectivity by executing sample queries and ensuring data is fetched and displayed correctly in the CRM."
+          },
+          {
+            "id": 2,
+            "title": "Develop Intelligent Prospecting Feature",
+            "description": "Implement a system to find and display contact information for decision-makers using Firecrawl.",
+            "dependencies": [
+              "20.1"
+            ],
+            "details": "Utilize Firecrawl's capabilities to identify and gather contact details of key personnel within target companies.",
+            "status": "pending",
+            "testStrategy": "Test the prospecting feature by searching for decision-makers in various companies and verifying the accuracy and completeness of the contact information retrieved."
+          },
+          {
+            "id": 3,
+            "title": "Implement Query Interpretation with NLP",
+            "description": "Use OpenAI's GPT for natural language processing to interpret user queries and trigger appropriate Firecrawl actions.",
+            "dependencies": [
+              "20.1"
+            ],
+            "details": "Integrate NLP to understand user inputs and convert them into actionable queries for Firecrawl.",
+            "status": "pending",
+            "testStrategy": "Input various user queries and ensure the system correctly interprets and executes the corresponding Firecrawl actions."
+          },
+          {
+            "id": 4,
+            "title": "Design Queue System for API Rate Management",
+            "description": "Create a queue system to handle API requests efficiently, managing rate limits and quotas.",
+            "dependencies": [
+              "20.1"
+            ],
+            "details": "Develop a mechanism to queue and process API requests to prevent exceeding Firecrawl's rate limits.",
+            "status": "pending",
+            "testStrategy": "Simulate high-volume requests and verify that the queue system manages the requests without breaching API limits."
+          },
+          {
+            "id": 5,
+            "title": "Ensure Compliance with Web Scraping Policies",
+            "description": "Review and implement compliance measures for web scraping legal requirements.",
+            "dependencies": [
+              "20.1"
+            ],
+            "details": "Ensure that all web scraping activities adhere to legal standards and Firecrawl's terms of service.",
+            "status": "pending",
+            "testStrategy": "Conduct a compliance audit to confirm that all implemented features meet legal and policy requirements for web scraping."
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "title": "Implement Report Generation via Natural Language",
+        "description": "Develop the capability to generate reports using natural language commands, supporting multiple formats and including visualizations.",
+        "details": "To implement report generation via natural language, integrate NLP capabilities to interpret commands such as 'Create a weekly pipeline report' or 'Generate monthly metrics dashboard'. Use OpenAI's GPT for parsing these commands and converting them into report generation tasks. Implement a backend service that compiles data from the CRM database, using Supabase queries to fetch relevant information. Utilize a data visualization library like Chart.js or D3.js to create charts and graphs for visual insights. Ensure the system supports multiple output formats, including inline chat display, PDF export, and email delivery. Develop a scheduling feature to allow users to set up recurring reports. Implement customizable templates to allow users to define the layout and content of their reports. Consider integrating with existing chat UI infrastructure (Task 11) for displaying reports inline.",
+        "testStrategy": "Test the report generation feature by inputting various natural language commands and verifying that reports are generated correctly. Check that the reports include accurate data and visualizations. Validate the functionality of exporting reports to PDF and sending them via email. Test the scheduling feature by setting up recurring reports and ensuring they are generated and delivered at the specified intervals. Verify that customizable templates work as expected, allowing users to define report layouts and content.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          12,
+          17
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Command Interpretation",
+            "description": "Develop and integrate natural language processing capabilities to interpret user commands for report generation.",
+            "dependencies": [],
+            "details": "Use OpenAI's GPT to parse natural language commands and convert them into actionable report generation tasks.",
+            "status": "pending",
+            "testStrategy": "Test the NLP integration by inputting various commands and verifying the correct interpretation and conversion into tasks."
+          },
+          {
+            "id": 2,
+            "title": "Develop Backend Service for Data Compilation",
+            "description": "Create a backend service to compile data from the CRM database for report generation.",
+            "dependencies": [
+              "21.1"
+            ],
+            "details": "Implement Supabase queries to fetch relevant data from the CRM database for use in reports.",
+            "status": "pending",
+            "testStrategy": "Verify that the backend service correctly compiles and retrieves data based on the parsed commands."
+          },
+          {
+            "id": 3,
+            "title": "Implement Data Visualization",
+            "description": "Integrate a data visualization library to create charts and graphs for report visual insights.",
+            "dependencies": [
+              "21.2"
+            ],
+            "details": "Utilize Chart.js or D3.js to generate visualizations for the compiled data in reports.",
+            "status": "pending",
+            "testStrategy": "Ensure that the visualizations accurately represent the data and are correctly integrated into the reports."
+          },
+          {
+            "id": 4,
+            "title": "Support Multiple Output Formats",
+            "description": "Develop functionality to support multiple report output formats, including inline display, PDF export, and email delivery.",
+            "dependencies": [
+              "21.3"
+            ],
+            "details": "Implement features to export reports to PDF and send them via email, and integrate with chat UI for inline display.",
+            "status": "pending",
+            "testStrategy": "Test the export and delivery features by generating reports in different formats and verifying their accuracy and delivery."
+          },
+          {
+            "id": 5,
+            "title": "Implement Scheduling and Customizable Templates",
+            "description": "Develop a scheduling feature and customizable templates for recurring and personalized report generation.",
+            "dependencies": [
+              "21.4"
+            ],
+            "details": "Allow users to set up recurring reports and define templates for report layout and content customization.",
+            "status": "pending",
+            "testStrategy": "Test the scheduling feature by setting up recurring reports and verifying their generation. Validate template customization by creating and using various templates."
+          }
+        ]
+      },
+      {
+        "id": 22,
+        "title": "Implement Smart Alerts and Notifications",
+        "description": "Develop a proactive monitoring and alerting system to notify users about lead follow-ups, behavioral triggers, and errors, with configurable alert conditions and notification preferences.",
+        "details": "To implement Smart Alerts and Notifications, integrate a notification service that supports real-time alerts via chat, email, and Slack. Use natural language processing (NLP) to allow users to configure alert conditions, such as 'Notify me when hot leads aren't followed up in 24h' or 'Alert me when a lead visits our pricing page'. Implement a backend service to monitor lead activities and trigger alerts based on predefined conditions. Use a database to store alert configurations and user preferences. Develop a user interface to display active alerts and their status, and allow users to manage their alert preferences. Ensure the system can handle error notifications, such as 'Tell me if enrichment fails for any lead'. Consider using a message queue system like RabbitMQ or Kafka for handling high-volume alert processing. Implement logging and monitoring to track alert delivery and system performance.",
+        "testStrategy": "Test the alerting system by configuring various alert conditions and verifying that notifications are sent correctly via chat, email, and Slack. Simulate lead activities and errors to trigger alerts and check that they are logged and displayed in the user interface. Validate the natural language processing capabilities by testing different alert configurations. Ensure that users can manage their alert preferences and that the system handles high-volume alert processing efficiently. Monitor system performance and alert delivery times under load.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          12,
+          15
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate Notification Service",
+            "description": "Integrate a notification service that supports real-time alerts via chat, email, and Slack.",
+            "dependencies": [],
+            "details": "Select and integrate a notification service that can handle real-time alerts across multiple channels including chat, email, and Slack.",
+            "status": "pending",
+            "testStrategy": "Test the integration by sending test notifications through each channel and verifying receipt."
+          },
+          {
+            "id": 2,
+            "title": "Develop NLP for Alert Configuration",
+            "description": "Implement natural language processing to allow users to configure alert conditions.",
+            "dependencies": [
+              "22.1"
+            ],
+            "details": "Use NLP to enable users to set alert conditions using natural language, such as 'Notify me when hot leads aren't followed up in 24h'.",
+            "status": "pending",
+            "testStrategy": "Test the NLP engine by inputting various alert conditions and verifying correct interpretation and configuration."
+          },
+          {
+            "id": 3,
+            "title": "Implement Backend Monitoring Service",
+            "description": "Develop a backend service to monitor lead activities and trigger alerts based on predefined conditions.",
+            "dependencies": [
+              "22.2"
+            ],
+            "details": "Create a backend service that continuously monitors lead activities and triggers alerts when conditions are met.",
+            "status": "pending",
+            "testStrategy": "Simulate lead activities and verify that alerts are triggered according to the predefined conditions."
+          },
+          {
+            "id": 4,
+            "title": "Design User Interface for Alerts",
+            "description": "Develop a user interface to display active alerts and their status, and allow users to manage their alert preferences.",
+            "dependencies": [
+              "22.3"
+            ],
+            "details": "Design and implement a user-friendly interface for users to view active alerts, their status, and manage alert preferences.",
+            "status": "pending",
+            "testStrategy": "Test the UI by checking the display of active alerts and verifying that users can manage their preferences effectively."
+          },
+          {
+            "id": 5,
+            "title": "Implement Error Notification Handling",
+            "description": "Ensure the system can handle error notifications and integrate logging and monitoring.",
+            "dependencies": [
+              "22.4"
+            ],
+            "details": "Implement error notification handling for scenarios like 'Tell me if enrichment fails for any lead' and integrate logging and monitoring.",
+            "status": "pending",
+            "testStrategy": "Simulate errors and verify that notifications are sent and logged correctly, and monitor system performance."
+          }
+        ]
+      },
+      {
+        "id": 23,
+        "title": "Implement Daily Briefings",
+        "description": "Develop a feature to provide personalized daily briefings summarizing key information and activities.",
+        "details": "To implement Daily Briefings, integrate natural language processing (NLP) capabilities to generate personalized summaries based on user preferences. The briefing should include overnight activities such as new leads, completed enrichments, and alerts. Highlight priority tasks for the day and show key metrics changes from the previous day. Identify urgent items requiring attention and allow users to customize briefing content and schedule. Support on-demand briefings with a 'catch me up' feature. Use existing data from the CRM and integrate with the Smart Alerts and Notifications system to fetch relevant information. Implement a user interface component in the chat UI to display the briefing, ensuring it is interactive and allows users to drill down into specific items.",
+        "testStrategy": "Test the daily briefing feature by configuring various user preferences and schedules. Verify that the briefings include accurate summaries of overnight activities, priority tasks, and key metrics changes. Check that urgent items are correctly identified and highlighted. Test the customization options to ensure users can tailor the briefing content and schedule. Validate the 'catch me up' feature by simulating different scenarios and ensuring the briefing updates accordingly. Ensure the briefing is displayed correctly in the chat UI and supports interaction with detailed items.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          12,
+          22
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Summary Generation",
+            "description": "Develop and integrate natural language processing capabilities to generate personalized daily summaries based on user preferences.",
+            "dependencies": [],
+            "details": "Use NLP to analyze user data and preferences to create personalized summaries of key information and activities.",
+            "status": "pending",
+            "testStrategy": "Test the NLP integration by verifying that summaries accurately reflect user preferences and include relevant information."
+          },
+          {
+            "id": 2,
+            "title": "Develop Briefing Content Customization",
+            "description": "Allow users to customize the content and schedule of their daily briefings.",
+            "dependencies": [
+              "23.1"
+            ],
+            "details": "Implement user interface options for users to select briefing content categories and set delivery schedules.",
+            "status": "pending",
+            "testStrategy": "Test customization options by configuring different user preferences and verifying that briefings are delivered as scheduled with selected content."
+          },
+          {
+            "id": 3,
+            "title": "Implement On-Demand 'Catch Me Up' Feature",
+            "description": "Develop a feature that allows users to request an on-demand briefing summarizing recent activities.",
+            "dependencies": [
+              "23.1"
+            ],
+            "details": "Create a user interface component that enables users to request a 'catch me up' briefing, fetching the latest relevant information.",
+            "status": "pending",
+            "testStrategy": "Test the on-demand feature by requesting briefings at various times and ensuring they include the most recent updates."
+          },
+          {
+            "id": 4,
+            "title": "Integrate with Smart Alerts and Notifications",
+            "description": "Integrate the daily briefing feature with the existing Smart Alerts and Notifications system to fetch relevant information.",
+            "dependencies": [
+              "23.1"
+            ],
+            "details": "Ensure that the briefing system can access and incorporate data from Smart Alerts and Notifications to provide comprehensive updates.",
+            "status": "pending",
+            "testStrategy": "Verify integration by checking that alerts and notifications are accurately reflected in the daily briefings."
+          },
+          {
+            "id": 5,
+            "title": "Design Interactive User Interface Component",
+            "description": "Develop an interactive user interface component within the chat UI to display the daily briefing.",
+            "dependencies": [
+              "23.2",
+              "23.3",
+              "23.4"
+            ],
+            "details": "Create a UI component that displays the briefing interactively, allowing users to drill down into specific items.",
+            "status": "pending",
+            "testStrategy": "Test the UI component by interacting with the briefing display and verifying that users can access detailed information on specific items."
+          }
+        ]
+      },
+      {
+        "id": 24,
+        "title": "Implement Context-Aware Actions",
+        "description": "Develop features to make the assistant aware of the current page context and provide relevant actions based on the page and conversation history.",
+        "details": "To implement context-aware actions, integrate a page detection mechanism that identifies the current page (e.g., lead detail, company view, dashboard) using URL patterns or page metadata. Develop a context management system that maintains conversation context and remembers entities mentioned across page navigations. Implement specific actions such as 'Enrich this lead' by auto-detecting lead IDs on lead detail pages, 'Find similar companies' using the current company as a reference on company pages, and 'Add this to workflow' for contextual workflow assignments. Use a state management library like Zustand to manage context data efficiently. Ensure the assistant can display contextual quick actions based on the detected page and maintain a seamless conversation flow. Consider integrating with existing chat UI components to display these actions intuitively.",
+        "testStrategy": "Test the context-aware actions by navigating through different pages and verifying that the assistant correctly identifies the page context and suggests relevant actions. Check that actions like 'Enrich this lead' and 'Find similar companies' are triggered correctly based on the page context. Validate that conversation context is maintained across page navigations and that entities mentioned in conversations are remembered. Ensure that contextual quick actions are displayed appropriately and function as expected.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          12,
+          14,
+          15
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate Page Detection Mechanism",
+            "description": "Develop a mechanism to detect the current page using URL patterns or page metadata.",
+            "dependencies": [],
+            "details": "Implement a system that can identify the current page context such as lead detail, company view, or dashboard by analyzing URL patterns or page metadata.",
+            "status": "pending",
+            "testStrategy": "Test by navigating through different pages and verifying that the system correctly identifies the page context."
+          },
+          {
+            "id": 2,
+            "title": "Develop Context Management System",
+            "description": "Create a system to maintain conversation context and remember entities across page navigations.",
+            "dependencies": [
+              "24.1"
+            ],
+            "details": "Implement a context management system that tracks conversation history and remembers entities mentioned, ensuring continuity across different pages.",
+            "status": "pending",
+            "testStrategy": "Verify that the system maintains context and remembers entities when navigating between pages."
+          },
+          {
+            "id": 3,
+            "title": "Implement Contextual Actions",
+            "description": "Develop specific actions like 'Enrich this lead' and 'Find similar companies' based on page context.",
+            "dependencies": [
+              "24.2"
+            ],
+            "details": "Create actions that are triggered based on the detected page context, such as auto-detecting lead IDs on lead detail pages and finding similar companies on company pages.",
+            "status": "pending",
+            "testStrategy": "Test that actions are correctly triggered based on the page context and perform the expected operations."
+          },
+          {
+            "id": 4,
+            "title": "Integrate State Management Library",
+            "description": "Use Zustand or a similar library to manage context data efficiently.",
+            "dependencies": [
+              "24.2"
+            ],
+            "details": "Integrate a state management library to handle context data, ensuring efficient data flow and state updates.",
+            "status": "pending",
+            "testStrategy": "Ensure that the state management system efficiently handles context data and updates correctly as the user navigates through pages."
+          },
+          {
+            "id": 5,
+            "title": "Enhance Chat UI for Contextual Actions",
+            "description": "Integrate with existing chat UI components to display contextual quick actions intuitively.",
+            "dependencies": [
+              "24.3",
+              "24.4"
+            ],
+            "details": "Modify the chat UI to intuitively display contextual quick actions based on the detected page, ensuring a seamless user experience.",
+            "status": "pending",
+            "testStrategy": "Verify that the chat UI displays the correct contextual actions based on the page context and maintains a seamless conversation flow."
+          }
+        ]
+      },
+      {
+        "id": 25,
+        "title": "Implement Multi-Step Task Orchestration",
+        "description": "Develop a system to enable complex multi-step operations through single commands, supporting chaining, sequential tasks, progress tracking, and error handling.",
+        "details": "To implement Multi-Step Task Orchestration, integrate a workflow engine capable of handling complex task sequences. Use LangGraph for orchestrating tasks and OpenAI's GPT for interpreting user commands. Implement a system to define and execute multi-step recipes, allowing users to save and reuse them. Incorporate a progress tracking mechanism to display the status of each step, and implement error handling strategies such as retries, skips, or aborts. Allow optional user approval for each step before proceeding. Support conditional logic using if/then statements to dynamically adjust task flows based on outcomes. Ensure the system is extensible to accommodate future task types and operations.",
+        "testStrategy": "Test the orchestration system by creating various multi-step recipes and executing them. Verify that each step is correctly interpreted and executed in sequence, with progress updates displayed. Simulate errors to test retry, skip, and abort functionalities. Validate user approval prompts and conditional logic execution. Ensure that saved recipes can be reused without errors and that the system handles complex task chains efficiently.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          15,
+          20
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate Workflow Engine",
+            "description": "Integrate a workflow engine capable of handling complex task sequences to support multi-step orchestration.",
+            "dependencies": [],
+            "details": "Select and integrate a suitable workflow engine that can manage task sequences, support chaining, and handle conditional logic.",
+            "status": "pending",
+            "testStrategy": "Verify the integration by creating sample workflows and ensuring that tasks are executed in the correct sequence with conditional logic applied."
+          },
+          {
+            "id": 2,
+            "title": "Implement Task Orchestration with LangGraph",
+            "description": "Use LangGraph to orchestrate tasks and manage task dependencies and execution order.",
+            "dependencies": [
+              "25.1"
+            ],
+            "details": "Leverage LangGraph to define task dependencies and execution order, ensuring seamless orchestration of multi-step tasks.",
+            "status": "pending",
+            "testStrategy": "Test the orchestration by defining complex task sequences and verifying that LangGraph correctly manages task execution and dependencies."
+          },
+          {
+            "id": 3,
+            "title": "Develop Multi-Step Recipe System",
+            "description": "Implement a system to define, execute, and save multi-step recipes for reuse.",
+            "dependencies": [
+              "25.2"
+            ],
+            "details": "Create a user-friendly interface for defining multi-step recipes, allowing users to save and reuse them for repeated operations.",
+            "status": "pending",
+            "testStrategy": "Test the recipe system by creating, saving, and executing various multi-step recipes, ensuring they execute correctly and can be reused."
+          },
+          {
+            "id": 4,
+            "title": "Incorporate Progress Tracking and Error Handling",
+            "description": "Implement mechanisms for progress tracking and error handling, including retries, skips, and aborts.",
+            "dependencies": [
+              "25.3"
+            ],
+            "details": "Develop a system to track the progress of each task step and implement error handling strategies such as retries, skips, or aborts.",
+            "status": "pending",
+            "testStrategy": "Simulate task execution with errors to test progress tracking and error handling functionalities, ensuring correct handling of retries, skips, and aborts."
+          },
+          {
+            "id": 5,
+            "title": "Implement User Approval and Conditional Logic",
+            "description": "Allow optional user approval for each step and support conditional logic to adjust task flows dynamically.",
+            "dependencies": [
+              "25.4"
+            ],
+            "details": "Enable user approval prompts for each task step and implement if/then statements to adjust task flows based on outcomes.",
+            "status": "pending",
+            "testStrategy": "Test user approval prompts and conditional logic by executing tasks with various conditions and verifying that the system correctly adjusts task flows based on user input and outcomes."
+          }
+        ]
+      },
+      {
+        "id": 26,
+        "title": "Implement Comparison Features",
+        "description": "Develop a feature to enable side-by-side comparison of entities such as companies, leads, or time periods, highlighting key differences and similarities.",
+        "details": "To implement the Comparison Features, start by designing a user interface that allows users to select multiple entities (3-5) for comparison. Integrate natural language processing (NLP) to interpret comparison queries like 'Compare Acme Corp vs TechStartup Inc'. Use the existing chat interface to handle these queries and fetch relevant data from the CRM database. Implement a scoring system to evaluate and rank comparison subjects based on relevant metrics. Develop algorithms to highlight key differences and similarities, and generate insights from the comparisons. Ensure the system supports exporting comparison tables in formats like CSV or PDF. Consider using data visualization libraries to present comparison results in a clear and interactive manner.",
+        "testStrategy": "Test the comparison feature by inputting various comparison queries and verifying that the system correctly identifies and fetches the relevant entities. Check that the comparison results are displayed accurately, highlighting key differences and similarities. Validate the scoring system by ensuring it ranks entities based on predefined metrics. Test the export functionality to confirm that comparison tables can be exported in the desired formats. Use edge cases to ensure the system handles multiple entities and large datasets efficiently.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          12,
+          13,
+          17
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design User Interface for Comparison",
+            "description": "Create a user interface that allows users to select multiple entities for comparison.",
+            "dependencies": [],
+            "details": "Design a UI component that enables users to select 3-5 entities for side-by-side comparison, ensuring it is intuitive and user-friendly.",
+            "status": "pending",
+            "testStrategy": "Verify that users can select the desired number of entities and that the selection process is smooth and error-free."
+          },
+          {
+            "id": 2,
+            "title": "Integrate NLP for Comparison Queries",
+            "description": "Implement natural language processing to interpret comparison queries.",
+            "dependencies": [
+              "26.1"
+            ],
+            "details": "Use NLP techniques to process and understand user queries such as 'Compare Acme Corp vs TechStartup Inc' and map them to the appropriate entities.",
+            "status": "pending",
+            "testStrategy": "Test with various comparison queries to ensure accurate interpretation and entity mapping."
+          },
+          {
+            "id": 3,
+            "title": "Develop Scoring System for Comparison",
+            "description": "Implement a scoring system to evaluate and rank comparison subjects.",
+            "dependencies": [
+              "26.2"
+            ],
+            "details": "Create algorithms to score entities based on relevant metrics, providing a ranked list for comparison.",
+            "status": "pending",
+            "testStrategy": "Validate the scoring system by comparing results with expected rankings based on predefined metrics."
+          },
+          {
+            "id": 4,
+            "title": "Highlight Differences and Similarities",
+            "description": "Develop algorithms to highlight key differences and similarities between entities.",
+            "dependencies": [
+              "26.3"
+            ],
+            "details": "Implement logic to identify and present significant differences and similarities in the comparison results.",
+            "status": "pending",
+            "testStrategy": "Check that the system accurately highlights differences and similarities in test comparisons."
+          },
+          {
+            "id": 5,
+            "title": "Export and Visualize Comparison Results",
+            "description": "Enable exporting of comparison results and integrate data visualization.",
+            "dependencies": [
+              "26.4"
+            ],
+            "details": "Support exporting comparison tables in formats like CSV or PDF and use data visualization libraries to present results interactively.",
+            "status": "pending",
+            "testStrategy": "Ensure that export functionality works correctly and that visualizations are clear and interactive."
+          }
+        ]
+      },
+      {
+        "id": 27,
+        "title": "Implement Multimodal Input Support",
+        "description": "Extend the chat interface to handle multiple input types including CSV parsing, image analysis, voice input, drag-and-drop file handling, OCR for business cards, and screenshot analysis.",
+        "details": "To implement multimodal input support, start by extending the chat interface to accept various input types. For CSV and XLSX files, integrate a library like Papaparse or SheetJS to parse and import data. For image analysis, use a service like Google Vision API or OpenCV to analyze uploaded images and extract relevant information. Implement voice input using the Web Speech API for capturing and processing voice queries. Enable drag-and-drop functionality by enhancing the chat UI to handle file uploads, using HTML5 drag-and-drop API. For OCR capabilities, integrate Tesseract.js to extract text from business cards and other documents. Implement screenshot analysis by using image processing techniques to identify and extract key information from screenshots. Ensure the system can handle various file formats, including CSV, XLSX, PDF, and images, by implementing appropriate parsers and converters. Consider security and privacy implications, ensuring all data is processed securely and user consent is obtained where necessary.",
+        "testStrategy": "Test the multimodal input support by uploading various file types (CSV, XLSX, PDF, images) and verifying correct parsing and data extraction. Test image analysis by uploading workflow diagrams and checking for accurate interpretation. Validate voice input by speaking queries and ensuring correct transcription and response. Test drag-and-drop functionality by dragging files into the chat interface and verifying successful upload and processing. For OCR, upload business card images and check for accurate text extraction. Test screenshot analysis by uploading screenshots and verifying the extraction of relevant information. Ensure all data is processed securely and user consent is obtained for sensitive operations.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          14,
+          15
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate CSV and XLSX Parsing",
+            "description": "Extend the chat interface to parse and import data from CSV and XLSX files.",
+            "dependencies": [],
+            "details": "Use libraries like Papaparse or SheetJS to handle CSV and XLSX file parsing and data import.",
+            "status": "pending",
+            "testStrategy": "Test by uploading CSV and XLSX files and verifying correct data parsing and import."
+          },
+          {
+            "id": 2,
+            "title": "Implement Image Analysis",
+            "description": "Enable image analysis for uploaded images to extract relevant information.",
+            "dependencies": [],
+            "details": "Use Google Vision API or OpenCV for analyzing images and extracting information.",
+            "status": "pending",
+            "testStrategy": "Test by uploading images and verifying accurate information extraction."
+          },
+          {
+            "id": 3,
+            "title": "Develop Voice Input Functionality",
+            "description": "Capture and process voice queries using the Web Speech API.",
+            "dependencies": [],
+            "details": "Implement voice input capture and processing using the Web Speech API.",
+            "status": "pending",
+            "testStrategy": "Validate voice input by speaking queries and ensuring correct processing."
+          },
+          {
+            "id": 4,
+            "title": "Enable Drag-and-Drop File Handling",
+            "description": "Enhance the chat UI to support drag-and-drop file uploads.",
+            "dependencies": [],
+            "details": "Use HTML5 drag-and-drop API to handle file uploads in the chat interface.",
+            "status": "pending",
+            "testStrategy": "Test drag-and-drop functionality by uploading various file types and verifying correct handling."
+          },
+          {
+            "id": 5,
+            "title": "Integrate OCR for Business Cards",
+            "description": "Implement OCR capabilities to extract text from business cards and documents.",
+            "dependencies": [],
+            "details": "Use Tesseract.js to perform OCR and extract text from business cards and other documents.",
+            "status": "pending",
+            "testStrategy": "Test OCR by uploading business cards and verifying accurate text extraction."
+          }
+        ]
+      },
+      {
+        "id": 28,
+        "title": "Implement Opportunity Detection",
+        "description": "Develop a system to proactively identify and score business opportunities using external data sources and engagement signals.",
+        "details": "To implement Opportunity Detection, integrate with external data sources such as Crunchbase, LinkedIn, and news APIs to gather relevant data about companies and leads. Develop a system to detect key events like funding rounds, job changes, and company expansions. Use machine learning models to analyze engagement signals, such as repeated website visits, to identify high-value leads. Implement a scoring algorithm to rank opportunities based on likelihood and potential value. Automate the creation of tasks for high-value opportunities, ensuring seamless integration with existing CRM workflows. Consider using a combination of rule-based and AI-driven approaches to balance precision and recall in opportunity detection. Ensure compliance with data privacy regulations when accessing and processing external data.",
+        "testStrategy": "Test the opportunity detection system by simulating various scenarios such as a company raising funding or a lead visiting the website multiple times. Verify that the system correctly identifies these events and scores the opportunities accurately. Check the integration with external data sources to ensure data is fetched and processed correctly. Validate the automated task creation by confirming that tasks are generated for high-value opportunities and integrated into the CRM workflow. Conduct user testing to gather feedback on the relevance and accuracy of detected opportunities.",
+        "status": "pending",
+        "dependencies": [
+          11,
+          18,
+          20,
+          22
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate External Data Sources",
+            "description": "Connect to external data sources such as Crunchbase, LinkedIn, and news APIs to gather relevant data about companies and leads.",
+            "dependencies": [],
+            "details": "Develop connectors and APIs to fetch data from external sources, ensuring data is up-to-date and relevant for opportunity detection.",
+            "status": "pending",
+            "testStrategy": "Verify data integration by checking the accuracy and timeliness of data fetched from each external source."
+          },
+          {
+            "id": 2,
+            "title": "Develop Event Detection System",
+            "description": "Create a system to detect key business events like funding rounds, job changes, and company expansions.",
+            "dependencies": [
+              "28.1"
+            ],
+            "details": "Implement algorithms to monitor and identify significant events from the integrated data sources.",
+            "status": "pending",
+            "testStrategy": "Simulate various business events and verify that the system accurately detects and logs these events."
+          },
+          {
+            "id": 3,
+            "title": "Analyze Engagement Signals",
+            "description": "Use machine learning models to analyze engagement signals such as repeated website visits to identify high-value leads.",
+            "dependencies": [
+              "28.1"
+            ],
+            "details": "Develop models to process engagement data and identify patterns indicating potential business opportunities.",
+            "status": "pending",
+            "testStrategy": "Test the models by simulating different engagement scenarios and ensuring accurate identification of high-value leads."
+          },
+          {
+            "id": 4,
+            "title": "Implement Opportunity Scoring Algorithm",
+            "description": "Develop a scoring algorithm to rank opportunities based on likelihood and potential value.",
+            "dependencies": [
+              "28.2",
+              "28.3"
+            ],
+            "details": "Create a scoring system that combines event detection and engagement analysis to prioritize business opportunities.",
+            "status": "pending",
+            "testStrategy": "Validate the scoring algorithm by comparing its output against known high-value opportunities and adjusting for accuracy."
+          },
+          {
+            "id": 5,
+            "title": "Automate Task Creation and CRM Integration",
+            "description": "Automate the creation of tasks for high-value opportunities and ensure seamless integration with existing CRM workflows.",
+            "dependencies": [
+              "28.4"
+            ],
+            "details": "Develop automation scripts to generate tasks in the CRM system based on opportunity scores, ensuring compliance with data privacy regulations.",
+            "status": "pending",
+            "testStrategy": "Test the automation by verifying that tasks are correctly created and integrated into the CRM for identified opportunities."
+          }
+        ]
+      },
+      {
+        "id": 29,
+        "title": "Implement Workflow Creation via Chat",
+        "description": "Enable users to create and manage custom workflows through conversational interactions in the chat interface.",
+        "details": "To implement Workflow Creation via Chat, integrate natural language processing (NLP) capabilities to interpret user commands for creating workflows. Use OpenAI's GPT for understanding and generating conversational responses. Develop a guided interface that helps users define workflow steps, set up triggers, conditions, and actions interactively. Implement a testing mechanism to simulate workflows before activation, ensuring they function as intended. Allow users to modify existing workflows using natural language commands and share workflow templates with others. Incorporate version control to track changes and manage different workflow versions. Leverage the existing chat UI infrastructure (Task 11) and agent control capabilities (Task 15) to facilitate seamless interaction and execution of workflows. Ensure the system supports saving and retrieving workflow configurations from the database, utilizing the schema defined in Task 3.",
+        "testStrategy": "Test the workflow creation feature by initiating workflow creation commands in the chat interface. Verify that the system correctly interprets user inputs and guides them through the workflow setup process. Simulate workflow execution to ensure triggers, conditions, and actions are correctly configured. Test the modification of existing workflows through chat commands and validate the sharing of workflow templates. Check version control functionality by creating multiple versions of a workflow and switching between them. Ensure all configurations are saved and retrieved accurately from the database.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          11,
+          15
+        ],
+        "priority": "low",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate NLP for Command Interpretation",
+            "description": "Integrate natural language processing capabilities to interpret user commands for creating workflows.",
+            "dependencies": [],
+            "details": "Use OpenAI's GPT to understand user inputs and generate appropriate responses for workflow creation.",
+            "status": "pending",
+            "testStrategy": "Test the NLP integration by inputting various workflow creation commands and verifying accurate interpretation."
+          },
+          {
+            "id": 2,
+            "title": "Develop Guided Workflow Interface",
+            "description": "Create a guided interface to help users define workflow steps, triggers, conditions, and actions.",
+            "dependencies": [
+              "29.1"
+            ],
+            "details": "Design an interactive interface that guides users through the setup of workflows using chat interactions.",
+            "status": "pending",
+            "testStrategy": "Simulate user interactions to ensure the interface correctly guides users through workflow setup."
+          },
+          {
+            "id": 3,
+            "title": "Implement Workflow Testing Mechanism",
+            "description": "Develop a mechanism to simulate workflows before activation to ensure they function as intended.",
+            "dependencies": [
+              "29.2"
+            ],
+            "details": "Create a testing environment where workflows can be simulated and validated for correct execution.",
+            "status": "pending",
+            "testStrategy": "Test the simulation feature by running various workflow scenarios and verifying expected outcomes."
+          },
+          {
+            "id": 4,
+            "title": "Enable Workflow Modification via Chat",
+            "description": "Allow users to modify existing workflows using natural language commands.",
+            "dependencies": [
+              "29.1",
+              "29.2"
+            ],
+            "details": "Integrate functionality to interpret modification commands and update workflows accordingly.",
+            "status": "pending",
+            "testStrategy": "Test modification commands to ensure workflows are updated correctly based on user inputs."
+          },
+          {
+            "id": 5,
+            "title": "Incorporate Version Control for Workflows",
+            "description": "Implement version control to track changes and manage different workflow versions.",
+            "dependencies": [
+              "29.4"
+            ],
+            "details": "Develop a system to manage workflow versions, allowing users to view and revert changes.",
+            "status": "pending",
+            "testStrategy": "Test version control by making changes to workflows and verifying the ability to track and revert changes."
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-09-30T21:37:23.141Z",
-      "updated": "2025-10-01T00:16:43.949Z",
+      "updated": "2025-10-08T18:02:56.974Z",
       "description": "Tasks for master context"
     }
   }
