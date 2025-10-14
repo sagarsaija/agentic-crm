@@ -1,47 +1,46 @@
-import { Client, ThreadState } from "@langchain/langgraph-sdk";
-import {
-  LangChainMessage,
-  LangGraphCommand,
-} from "@assistant-ui/react-langgraph";
+import { LangChainMessage } from "@assistant-ui/react-langgraph";
 
-const createClient = () => {
-  const apiUrl =
-    process.env["NEXT_PUBLIC_LANGGRAPH_API_URL"] ||
-    new URL("/api", window.location.href).href;
-  return new Client({
-    apiUrl,
-  });
+// Generate a simple thread ID for local development
+const generateThreadId = () => {
+  return `thread_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 };
 
 export const createThread = async () => {
-  const client = createClient();
-  return client.threads.create();
+  // For local development, just generate a thread ID
+  const thread_id = generateThreadId();
+  return { thread_id };
 };
 
-export const getThreadState = async (
-  threadId: string,
-): Promise<ThreadState<{ messages: LangChainMessage[] }>> => {
-  const client = createClient();
-  return client.threads.getState(threadId);
+export const getThreadState = async (threadId: string) => {
+  // For local development, return minimal state
+  // In production, this would fetch from the backend
+  return {
+    values: {
+      messages: [],
+    },
+  };
 };
 
 export const sendMessage = async (params: {
   threadId: string;
   messages?: LangChainMessage[];
-  command?: LangGraphCommand | undefined;
 }) => {
-  const client = createClient();
-  return client.runs.stream(
-    params.threadId,
-    process.env["NEXT_PUBLIC_LANGGRAPH_ASSISTANT_ID"]!,
-    {
-      input: params.messages?.length
-        ? {
-            messages: params.messages,
-          }
-        : null,
-      command: params.command,
-      streamMode: ["messages", "updates"],
+  // Use our local agent endpoint
+  const response = await fetch("/api/agent", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({
+      threadId: params.threadId,
+      messages: params.messages || [],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Agent request failed: ${response.statusText}`);
+  }
+
+  // Return the response body as a stream
+  return response.body;
 };

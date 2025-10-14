@@ -1,0 +1,8 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "crm_assistant": "./frontend/lib/agents/crm-assistant-graph.ts:crmAssistantGraph"
+  },
+  "env": ".env"
+}
+
