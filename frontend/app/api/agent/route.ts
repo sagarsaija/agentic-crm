@@ -4,7 +4,7 @@ import { HumanMessage, AIMessage } from "@langchain/core/messages";
 export const runtime = "nodejs";
 
 /**
- * Local agent endpoint
+ * Local agent endpoint for LangGraph streaming
  * POST /api/agent
  */
 export async function POST(request: Request) {
@@ -22,34 +22,47 @@ export async function POST(request: Request) {
 
     // Convert messages to LangChain format
     const langchainMessages = messages.map((msg: any) => {
-      if (msg.role === "user") {
-        return new HumanMessage(msg.content);
-      } else if (msg.role === "assistant") {
-        return new AIMessage(msg.content);
+      let content = "";
+
+      if (typeof msg.content === "string") {
+        content = msg.content;
+      } else if (Array.isArray(msg.content)) {
+        content = msg.content
+          .map((part: any) => {
+            if (part.type === "text") return part.text;
+            return "";
+          })
+          .join("");
       }
-      return new HumanMessage(msg.content);
+
+      if (msg.role === "user") {
+        return new HumanMessage(content);
+      } else if (msg.role === "assistant") {
+        return new AIMessage(content);
+      }
+      return new HumanMessage(content);
     });
 
-    // Stream the graph execution
-    const stream = await crmAssistantGraph.stream(
-      {
-        messages: langchainMessages,
-      },
-      {
-        configurable: {
-          thread_id: `thread_${Date.now()}`,
-        },
-        streamMode: "messages",
-      },
-    );
-
-    // Create a plain ReadableStream for streaming text
-    const readableStream = new ReadableStream({
+    // Create a ReadableStream for LangGraph SSE format
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
       async start(controller) {
         try {
-          const encoder = new TextEncoder();
+          // Stream the graph execution
+          const graphStream = await crmAssistantGraph.stream(
+            {
+              messages: langchainMessages,
+            },
+            {
+              configurable: {
+                thread_id: `thread_${Date.now()}`,
+              },
+              streamMode: "messages",
+            },
+          );
 
-          for await (const chunk of stream) {
+          // Process LangGraph stream and write SSE events
+          for await (const chunk of graphStream) {
             const [message, metadata] = chunk;
 
             if (message && message.content && message._getType() === "ai") {
@@ -58,23 +71,36 @@ export async function POST(request: Request) {
                   ? message.content
                   : JSON.stringify(message.content);
 
-              // Send text chunks
-              controller.enqueue(encoder.encode(content));
+              // Write as SSE event
+              const eventData = JSON.stringify([message, metadata]);
+              controller.enqueue(
+                encoder.encode(`event: message\ndata: ${eventData}\n\n`),
+              );
             }
           }
 
+          // Signal completion
+          controller.enqueue(encoder.encode(`event: end\ndata: {}\n\n`));
           controller.close();
         } catch (error) {
           console.error("Stream error:", error);
+          const errorData = JSON.stringify({
+            error: error instanceof Error ? error.message : "Unknown error",
+          });
+          controller.enqueue(
+            encoder.encode(`event: error\ndata: ${errorData}\n\n`),
+          );
           controller.error(error);
         }
       },
     });
 
-    return new Response(readableStream, {
+    // Return response with SSE headers
+    return new Response(stream, {
       headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Transfer-Encoding": "chunked",
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
       },
     });
   } catch (error) {

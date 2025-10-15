@@ -375,12 +375,42 @@ const model = new ChatOpenAI({
   temperature: 0.7,
 }).bindTools(tools);
 
+// System message to guide the agent
+const systemMessage = {
+  role: "system",
+  content: `You are a helpful CRM assistant with access to a lead management system. 
+
+You have access to the following tools:
+- search_leads: Search and filter leads by various criteria
+- get_lead_status: Get detailed status of a specific lead
+- process_lead: Trigger lead processing workflow
+- get_workflow_status: Check workflow execution status
+- list_agents: List all available AI agents
+- get_crm_stats: Get CRM statistics and metrics
+
+IMPORTANT: When a user asks about leads, statistics, or any CRM data, you MUST use the appropriate tool to fetch real data. Do not make up information.
+
+Examples:
+- "show me all leads" → use search_leads tool
+- "get me CRM stats" → use get_crm_stats tool
+- "find YC founders" → use search_leads with query "YC"
+
+Always use tools to answer questions about the CRM data.`,
+};
+
 /**
  * Agent node - decides whether to use tools or respond
  */
 async function callModel(state: typeof MessagesAnnotation.State) {
   const messages = state.messages;
-  const response = await model.invoke(messages);
+
+  // Add system message if not already present
+  const hasSystemMessage = messages.some((m: any) => m.role === "system");
+  const messagesWithSystem = hasSystemMessage
+    ? messages
+    : [systemMessage, ...messages];
+
+  const response = await model.invoke(messagesWithSystem);
   return { messages: [response] };
 }
 

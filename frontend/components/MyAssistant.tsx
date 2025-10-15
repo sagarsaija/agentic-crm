@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { marked } from "marked";
 
 interface Message {
   id: string;
@@ -64,20 +65,56 @@ export function MyAssistant() {
 
       setMessages((prev) => [...prev, assistantMessage]);
 
+      // Parse SSE stream
+      let buffer = "";
+      let currentEvent = "";
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        assistantContent += decoder.decode(value, { stream: true });
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
 
-        setMessages((prev) => {
-          const newMessages = [...prev];
-          newMessages[newMessages.length - 1] = {
-            ...assistantMessage,
-            content: assistantContent,
-          };
-          return newMessages;
-        });
+        for (const line of lines) {
+          if (line.startsWith("event: ")) {
+            currentEvent = line.slice(7).trim();
+          } else if (line.startsWith("data: ")) {
+            if (currentEvent === "message") {
+              try {
+                const data = JSON.parse(line.slice(6));
+                const [message] = data;
+
+                // Handle LangChain serialized format
+                const messageContent =
+                  message?.kwargs?.content || message?.content;
+
+                if (messageContent) {
+                  const content =
+                    typeof messageContent === "string"
+                      ? messageContent
+                      : JSON.stringify(messageContent);
+
+                  assistantContent += content;
+                  setMessages((prev) => {
+                    const newMessages = [...prev];
+                    newMessages[newMessages.length - 1] = {
+                      ...assistantMessage,
+                      content: assistantContent,
+                    };
+                    return newMessages;
+                  });
+                }
+              } catch (e) {
+                console.error("Parse error:", e);
+              }
+            } else if (currentEvent === "end") {
+              // Stream completed
+              break;
+            }
+          }
+        }
       }
     } catch (error) {
       console.error("Chat error:", error);
@@ -119,7 +156,12 @@ export function MyAssistant() {
                   : "bg-background text-foreground"
               }`}
             >
-              <div className="whitespace-pre-wrap">{msg.content}</div>
+              <div
+                className="[&>li]:my-1 [&>ol]:my-2 [&>p]:m-0 [&>p]:leading-normal [&>ul]:my-2"
+                dangerouslySetInnerHTML={{
+                  __html: marked(msg.content, { breaks: true }),
+                }}
+              />
             </div>
           </div>
         ))}
