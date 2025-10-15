@@ -65,12 +65,8 @@ export async function POST(request: Request) {
           for await (const chunk of graphStream) {
             const [message, metadata] = chunk;
 
-            if (message && message.content && message._getType() === "ai") {
-              const content =
-                typeof message.content === "string"
-                  ? message.content
-                  : JSON.stringify(message.content);
-
+            // Stream all message types (ai, tool, function, etc)
+            if (message) {
               // Write as SSE event
               const eventData = JSON.stringify([message, metadata]);
               controller.enqueue(

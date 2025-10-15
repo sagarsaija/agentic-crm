@@ -356,8 +356,247 @@ const getCRMStatsTool = tool(
   },
 );
 
+/**
+ * Tool: Natural Language CRM Query
+ * Execute complex natural language queries against the CRM database
+ */
+const queryCRMTool = tool(
+  async ({ query, targetEntity = "leads", limit = 20, offset = 0 }) => {
+    const supabase = createServiceRoleClient();
+
+    // Use GPT to parse the natural language query into structured filters
+    const parser = new ChatOpenAI({
+      modelName: "gpt-4o-mini",
+      temperature: 0,
+    });
+
+    const parsingPrompt = `You are a CRM query parser. Convert the natural language query into structured filters.
+
+Available fields for leads:
+- first_name, last_name, email, title, company_name
+- status: new, researching, qualified, contacted, engaged, nurturing, won, lost
+- score: 0-100
+- location, linkedin_url, twitter_url
+- research_summary, pain_points, buying_signals
+- created_at, updated_at
+
+Available fields for companies:
+- name, domain, industry, size, revenue
+- funding_stage, funding_amount, location
+- description, tech_stack
+
+User query: "${query}"
+
+Return a JSON object with these fields:
+{
+  "filters": {
+    "textSearch": "search terms for ILIKE",
+    "exactMatches": {"field": "value"},
+    "rangeFilters": {"field": {"gte": min, "lte": max}},
+    "arrayContains": {"field": "value"}
+  },
+  "sortBy": "field_name",
+  "sortOrder": "asc" or "desc"
+}
+
+Example 1: "tech leads from Bay Area with >50 score"
+{
+  "filters": {
+    "textSearch": "tech Bay Area",
+    "rangeFilters": {"score": {"gte": 50}}
+  }
+}
+
+Example 2: "qualified leads at SaaS companies"
+{
+  "filters": {
+    "textSearch": "SaaS",
+    "exactMatches": {"status": "qualified"}
+  }
+}
+
+Return ONLY the JSON object, no explanation.`;
+
+    try {
+      const parseResponse = await parser.invoke(parsingPrompt);
+      const parseContent =
+        typeof parseResponse.content === "string"
+          ? parseResponse.content
+          : JSON.stringify(parseResponse.content);
+
+      // Extract JSON from response
+      const jsonMatch = parseContent.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error("Could not parse query structure");
+      }
+
+      const parsed = JSON.parse(jsonMatch[0]);
+      const { filters, sortBy, sortOrder } = parsed;
+
+      // Build Supabase query based on target entity
+      let queryBuilder;
+
+      if (targetEntity === "leads") {
+        queryBuilder = supabase
+          .from("leads")
+          .select(
+            `
+          id,
+          first_name,
+          last_name,
+          email,
+          title,
+          company_name,
+          status,
+          score,
+          location,
+          research_summary,
+          pain_points,
+          buying_signals,
+          linkedin_url,
+          created_at,
+          updated_at
+        `,
+            { count: "exact" },
+          )
+          .range(offset, offset + limit - 1);
+      } else if (targetEntity === "companies") {
+        queryBuilder = supabase
+          .from("companies")
+          .select(
+            `
+          id,
+          name,
+          domain,
+          industry,
+          size,
+          revenue,
+          funding_stage,
+          funding_amount,
+          location,
+          description,
+          tech_stack,
+          created_at,
+          updated_at
+        `,
+            { count: "exact" },
+          )
+          .range(offset, offset + limit - 1);
+      } else {
+        return {
+          success: false,
+          error: `Unknown entity type: ${targetEntity}`,
+        };
+      }
+
+      // Apply text search
+      if (filters?.textSearch) {
+        const searchTerm = filters.textSearch;
+        if (targetEntity === "leads") {
+          queryBuilder = queryBuilder.or(
+            `first_name.ilike.%${searchTerm}%,last_name.ilike.%${searchTerm}%,company_name.ilike.%${searchTerm}%,title.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%,research_summary.ilike.%${searchTerm}%`,
+          );
+        } else if (targetEntity === "companies") {
+          queryBuilder = queryBuilder.or(
+            `name.ilike.%${searchTerm}%,industry.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`,
+          );
+        }
+      }
+
+      // Apply exact matches
+      if (filters?.exactMatches) {
+        for (const [field, value] of Object.entries(filters.exactMatches)) {
+          queryBuilder = queryBuilder.eq(field, value);
+        }
+      }
+
+      // Apply range filters
+      if (filters?.rangeFilters) {
+        for (const [field, range] of Object.entries(filters.rangeFilters)) {
+          const rangeObj = range as any;
+          if (rangeObj.gte !== undefined) {
+            queryBuilder = queryBuilder.gte(field, rangeObj.gte);
+          }
+          if (rangeObj.lte !== undefined) {
+            queryBuilder = queryBuilder.lte(field, rangeObj.lte);
+          }
+          if (rangeObj.gt !== undefined) {
+            queryBuilder = queryBuilder.gt(field, rangeObj.gt);
+          }
+          if (rangeObj.lt !== undefined) {
+            queryBuilder = queryBuilder.lt(field, rangeObj.lt);
+          }
+        }
+      }
+
+      // Apply sorting
+      if (sortBy) {
+        queryBuilder = queryBuilder.order(sortBy, {
+          ascending: sortOrder === "asc",
+        });
+      } else {
+        // Default sort
+        queryBuilder = queryBuilder.order("created_at", { ascending: false });
+      }
+
+      const { data, error, count } = await queryBuilder;
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return {
+        success: true,
+        query: query,
+        parsedFilters: filters,
+        results: data || [],
+        count: count || 0,
+        limit,
+        offset,
+        hasMore: count ? count > offset + limit : false,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to parse query",
+      };
+    }
+  },
+  {
+    name: "query_crm",
+    description:
+      "Execute complex natural language queries against the CRM database. Supports filtering by multiple criteria, searching across text fields, range queries, and sorting. Examples: 'show me all tech leads from Bay Area with >50 employees', 'find qualified SaaS founders', 'get contacts at YC companies in AI space'",
+    schema: z.object({
+      query: z
+        .string()
+        .describe(
+          "Natural language query describing what data to retrieve from the CRM",
+        ),
+      targetEntity: z
+        .enum(["leads", "companies"])
+        .optional()
+        .default("leads")
+        .describe("Which CRM entity to query (default: leads)"),
+      limit: z
+        .number()
+        .optional()
+        .default(20)
+        .describe("Maximum number of results to return (default: 20)"),
+      offset: z
+        .number()
+        .optional()
+        .default(0)
+        .describe("Offset for pagination (default: 0)"),
+    }),
+  },
+);
+
 // Create the tools array
 const tools = [
+  queryCRMTool,
   searchLeadsTool,
   getLeadStatusTool,
   processLeadTool,
@@ -381,7 +620,8 @@ const systemMessage = {
   content: `You are a helpful CRM assistant with access to a lead management system. 
 
 You have access to the following tools:
-- search_leads: Search and filter leads by various criteria
+- query_crm: Execute complex natural language queries with advanced filtering (USE THIS FIRST for complex queries)
+- search_leads: Simple search and filter for leads
 - get_lead_status: Get detailed status of a specific lead
 - process_lead: Trigger lead processing workflow
 - get_workflow_status: Check workflow execution status
@@ -390,10 +630,42 @@ You have access to the following tools:
 
 IMPORTANT: When a user asks about leads, statistics, or any CRM data, you MUST use the appropriate tool to fetch real data. Do not make up information.
 
-Examples:
-- "show me all leads" → use search_leads tool
-- "get me CRM stats" → use get_crm_stats tool
-- "find YC founders" → use search_leads with query "YC"
+QUERY TOOL PRIORITY:
+- For complex queries with multiple filters → use query_crm tool
+- **ALWAYS use query_crm for ANY request to see/show/list/display leads or companies**
+- Use search_leads ONLY for simple name/company lookups without displaying results
+
+Examples of query_crm usage (displays results in table):
+- "show me all leads" → use query_crm tool with empty filters
+- "list all companies" → use query_crm with targetEntity="companies"
+- "show me tech leads from Bay Area with >50 score" → use query_crm tool
+- "find qualified SaaS founders" → use query_crm tool
+- "get contacts at YC companies" → use query_crm tool with "YC" query
+- "get me CRM stats" → use get_crm_stats tool (summary only)
+
+When displaying query results from query_crm tool:
+1. **CRITICAL: DO NOT repeat the results in text format** - the tool already shows a nice table
+2. **ONLY provide a brief 1-sentence summary** like "Found 6 results" or "Here are your leads"
+3. **DO NOT list out individual items** - NO bullet points, NO details, NO markdown tables
+4. The tool call automatically renders a beautiful table component
+5. Example GOOD response: "I found 15 leads matching your criteria."
+6. Example BAD response: DO NOT list "Sarah Chen - VP of Engineering..." etc.
+7. If paginated, just mention "More results available - ask to see more"
+
+PAGINATION HANDLING:
+- Default limit is 20 results per query
+- If hasMore=true, user can ask "show me more" or "next page"
+- For "more/next", use offset = previous offset + limit
+- Example: First query (offset=0, limit=20) → Next query (offset=20, limit=20)
+- Track context: remember the original query to paginate correctly
+- Inform user: "Showing results 1-20 of 45" or "Showing results 21-40 of 45"
+
+FOLLOW-UP QUERIES:
+- Maintain conversation context for refinements
+- "show only qualified leads" → add exactMatches filter to existing query
+- "with score > 70" → add rangeFilter to existing query
+- "sort by score" → modify sortBy and sortOrder
+- Remember the user's original intent across follow-ups
 
 Always use tools to answer questions about the CRM data.`,
 };
