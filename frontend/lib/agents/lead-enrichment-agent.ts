@@ -1,4 +1,4 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { createFalMiniModel } from "@/lib/fal-openrouter-config";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
@@ -83,10 +83,7 @@ async function analyzeLeadData(
   lead: LeadInput,
   searchResults: string,
 ): Promise<EnrichmentResult> {
-  const model = new ChatOpenAI({
-    modelName: "gpt-4o-mini",
-    temperature: 0.7,
-  });
+  const model = createFalMiniModel(0.7);
 
   const prompt = ChatPromptTemplate.fromMessages([
     [

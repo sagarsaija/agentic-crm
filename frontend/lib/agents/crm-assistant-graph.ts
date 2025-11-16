@@ -1,10 +1,10 @@
-import { ChatOpenAI } from "@langchain/openai";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { executeLeadProcessingWorkflow } from "@/lib/workflows/lead-processing-workflow";
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import { StateGraph, MessagesAnnotation } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
+import { createFalChatModel, createFalMiniModel } from "@/lib/fal-openrouter-config";
 
 /**
  * Tool: Search Leads
@@ -357,6 +357,183 @@ const getCRMStatsTool = tool(
 );
 
 /**
+ * Tool: Get Company Details
+ * Get detailed information about a company including related leads
+ */
+const getCompanyDetailsTool = tool(
+  async ({ companyName, companyId }) => {
+    const supabase = createServiceRoleClient();
+
+    let company;
+
+    // Search by ID or name
+    if (companyId) {
+      const { data, error } = await supabase
+        .from("companies")
+        .select("*")
+        .eq("id", companyId)
+        .single();
+
+      if (error || !data) {
+        return {
+          success: false,
+          error: error?.message || "Company not found",
+        };
+      }
+      company = data;
+    } else if (companyName) {
+      // Try exact match first
+      let { data, error } = await supabase
+        .from("companies")
+        .select("*")
+        .ilike("name", companyName)
+        .limit(1)
+        .single();
+
+      if (error || !data) {
+        // Try fuzzy search
+        const { data: fuzzyData } = await supabase
+          .from("companies")
+          .select("*")
+          .ilike("name", `%${companyName}%`)
+          .limit(1);
+
+        if (!fuzzyData || fuzzyData.length === 0) {
+          return {
+            success: false,
+            error: "Company not found",
+          };
+        }
+        company = fuzzyData[0];
+      } else {
+        company = data;
+      }
+    } else {
+      return {
+        success: false,
+        error: "Either companyName or companyId is required",
+      };
+    }
+
+    // Get related leads
+    const { data: leads } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("company_name", company.name)
+      .order("score", { ascending: false })
+      .limit(10);
+
+    // Get recent activities for this company
+    const { data: activities } = await supabase
+      .from("activities")
+      .select("*")
+      .eq("company_id", company.id)
+      .order("created_at", { ascending: false })
+      .limit(5);
+
+    // Get similar companies (same industry)
+    const { data: similarCompanies } = await supabase
+      .from("companies")
+      .select("id, name, industry, size, location")
+      .eq("industry", company.industry)
+      .neq("id", company.id)
+      .limit(5);
+
+    return {
+      success: true,
+      company,
+      relatedLeads: leads || [],
+      recentActivities: activities || [],
+      similarCompanies: similarCompanies || [],
+    };
+  },
+  {
+    name: "get_company_details",
+    description:
+      "Get detailed information about a company including related leads, recent activities, and similar companies. Use when user asks 'Tell me about [Company]' or wants company information.",
+    schema: z.object({
+      companyName: z
+        .string()
+        .optional()
+        .describe("The name of the company to look up"),
+      companyId: z
+        .string()
+        .optional()
+        .describe("The UUID of the company to look up"),
+    }),
+  },
+);
+
+/**
+ * Tool: Get Lead by Email
+ * Look up a lead by their email address
+ */
+const getLeadByEmailTool = tool(
+  async ({ email }) => {
+    const supabase = createServiceRoleClient();
+
+    // Search for lead by email
+    const { data: lead, error } = await supabase
+      .from("leads")
+      .select(
+        `
+        *,
+        company:companies(*)
+      `,
+      )
+      .ilike("email", email)
+      .single();
+
+    if (error || !lead) {
+      return {
+        success: false,
+        error: error?.message || "Lead not found",
+      };
+    }
+
+    // Get recent activities
+    const { data: activities } = await supabase
+      .from("activities")
+      .select("*")
+      .eq("lead_id", lead.id)
+      .order("created_at", { ascending: false })
+      .limit(5);
+
+    // Get other leads at the same company
+    const { data: colleagueLeads } = await supabase
+      .from("leads")
+      .select("id, first_name, last_name, email, title, status, score")
+      .eq("company_name", lead.company_name)
+      .neq("id", lead.id)
+      .limit(5);
+
+    // Get conversations if any
+    const { data: conversations } = await supabase
+      .from("conversations")
+      .select("*")
+      .eq("lead_id", lead.id)
+      .order("created_at", { ascending: false })
+      .limit(3);
+
+    return {
+      success: true,
+      lead,
+      recentActivities: activities || [],
+      colleagueLeads: colleagueLeads || [],
+      conversations: conversations || [],
+    };
+  },
+  {
+    name: "get_lead_by_email",
+    description:
+      "Look up a lead by their email address. Returns detailed lead information, recent activities, colleagues at the same company, and conversation history. Use when user asks 'What's the status of [email]' or wants to look up a specific person by email.",
+    schema: z.object({
+      email: z.string().describe("The email address of the lead to look up"),
+    }),
+  },
+);
+
+/**
  * Tool: Natural Language CRM Query
  * Execute complex natural language queries against the CRM database
  */
@@ -364,11 +541,8 @@ const queryCRMTool = tool(
   async ({ query, targetEntity = "leads", limit = 20, offset = 0 }) => {
     const supabase = createServiceRoleClient();
 
-    // Use GPT to parse the natural language query into structured filters
-    const parser = new ChatOpenAI({
-      modelName: "gpt-4o-mini",
-      temperature: 0,
-    });
+    // Use AI to parse the natural language query into structured filters
+    const parser = createFalMiniModel(0);
 
     const parsingPrompt = `You are a CRM query parser. Convert the natural language query into structured filters.
 
@@ -599,6 +773,8 @@ const tools = [
   queryCRMTool,
   searchLeadsTool,
   getLeadStatusTool,
+  getCompanyDetailsTool,
+  getLeadByEmailTool,
   processLeadTool,
   getWorkflowStatusTool,
   listAgentsTool,
@@ -609,10 +785,10 @@ const tools = [
 const toolNode = new ToolNode(tools);
 
 // Initialize the model with tools
-const model = new ChatOpenAI({
-  modelName: "gpt-4o",
-  temperature: 0.7,
-}).bindTools(tools);
+const model = createFalChatModel(
+  undefined, // Use default model (Claude Sonnet 4.5)
+  0.7
+).bindTools(tools);
 
 // System message to guide the agent
 const systemMessage = {
@@ -622,13 +798,20 @@ const systemMessage = {
 You have access to the following tools:
 - query_crm: Execute complex natural language queries with advanced filtering (USE THIS FIRST for complex queries)
 - search_leads: Simple search and filter for leads
-- get_lead_status: Get detailed status of a specific lead
+- get_lead_status: Get detailed status of a specific lead by ID
+- get_company_details: Look up company information with related leads and similar companies (USE for "Tell me about [Company]")
+- get_lead_by_email: Look up a lead by email address with related information (USE for "What's the status of [email]")
 - process_lead: Trigger lead processing workflow
 - get_workflow_status: Check workflow execution status
 - list_agents: List all available AI agents
 - get_crm_stats: Get CRM statistics and metrics
 
 IMPORTANT: When a user asks about leads, statistics, or any CRM data, you MUST use the appropriate tool to fetch real data. Do not make up information.
+
+LOOKUP PATTERNS:
+- "Tell me about [Company Name]" or "What do you know about [Company]" → use get_company_details
+- "What's the status of [email]" or "Look up [email]" → use get_lead_by_email
+- "Show me leads at [Company]" → use query_crm with company name filter
 
 QUERY TOOL PRIORITY:
 - For complex queries with multiple filters → use query_crm tool

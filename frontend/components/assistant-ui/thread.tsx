@@ -27,6 +27,7 @@ import {
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
 import { CRMQueryResult } from "@/components/assistant-ui/crm-query-result";
+import { LookupResult } from "@/components/assistant-ui/lookup-result";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -248,7 +249,11 @@ const AssistantMessage: FC = () => {
             components={{
               Text: MarkdownText,
               tools: {
-                query_crm: CRMQueryResult,
+                by_name: {
+                  query_crm: CRMQueryResult,
+                  get_company_details: LookupResult,
+                  get_lead_by_email: LookupResult,
+                },
                 Fallback: ToolFallback,
               },
             }}

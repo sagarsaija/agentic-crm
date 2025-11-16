@@ -33,7 +33,7 @@ CREATE TABLE leads (
   -- Contact Info
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
-  email TEXT NOT NULL,
+  email TEXT, -- Optional - can be filled by AI agents (Contact Finder, Profile Scraper)
   phone TEXT,
   title TEXT,
   

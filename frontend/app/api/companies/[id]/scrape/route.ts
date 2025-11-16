@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { scrapePage } from "@/lib/scraping/firecrawl-client";
-import { ChatOpenAI } from "@langchain/openai";
+import { createFalMiniModel } from "@/lib/fal-openrouter-config";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
@@ -56,10 +56,7 @@ export async function POST(
 
     // Analyze the scraped content with AI
     console.log("Analyzing scraped content...");
-    const model = new ChatOpenAI({
-      modelName: "gpt-4o-mini",
-      temperature: 0.7,
-    });
+    const model = createFalMiniModel(0.7);
 
     const prompt = ChatPromptTemplate.fromMessages([
       [

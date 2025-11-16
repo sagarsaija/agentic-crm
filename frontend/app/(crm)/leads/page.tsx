@@ -61,10 +61,12 @@ export default async function LeadsPage() {
             Manage and track all your leads
           </p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Lead
-        </Button>
+        <Link href="/leads/new">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Lead
+          </Button>
+        </Link>
       </div>
 
       <Card>
@@ -77,10 +79,12 @@ export default async function LeadsPage() {
               <p className="text-muted-foreground">
                 No leads yet. Add your first lead to get started!
               </p>
-              <Button className="mt-4">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Your First Lead
-              </Button>
+              <Link href="/leads/new">
+                <Button className="mt-4">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Your First Lead
+                </Button>
+              </Link>
             </div>
           ) : (
             <Table>

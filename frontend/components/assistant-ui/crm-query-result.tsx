@@ -133,7 +133,12 @@ export const CRMQueryResult: ToolCallMessagePartComponent = ({
             </TableHeader>
             <TableBody>
               {data.results.map((row: any, idx: number) => (
-                <TableRow key={row.id || idx}>
+                <TableRow
+                  key={
+                    row.id ||
+                    `query-result-${idx}-${row.email || row.name || idx}`
+                  }
+                >
                   {isLeads ? (
                     <>
                       <TableCell className="font-medium">
