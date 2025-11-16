@@ -184,8 +184,49 @@ export async function profileScraperStep(
       },
     });
 
-    // Update lead in database with scraped information
     const supabase = createServiceRoleClient();
+    
+    // Check if profile scraping was successful or if it gracefully failed
+    const hasScrapedData = profileData.title || profileData.companyName || 
+                           profileData.email || profileData.bio;
+
+    if (!hasScrapedData) {
+      // Profile scraping unavailable - log and continue
+      console.log("Profile scraping unavailable, continuing to enrichment");
+      
+      await supabase.from("activities").insert({
+        lead_id: context.leadId,
+        type: "agent_action",
+        subject: "Profile Scraper Info",
+        content: profileData.extractionSummary || "Profile scraping unavailable. Enrichment Agent will collect data.",
+        metadata: {
+          agent: "profile-scraper",
+          status: "skipped",
+          reason: profileData.notes || "Scraping service unavailable",
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      step.status = "completed";
+      step.completedAt = new Date();
+      step.output = {
+        skipped: true,
+        reason: profileData.extractionSummary,
+        notes: profileData.notes,
+      };
+
+      // Continue to contact finder or enrichment
+      const needsContactFinding = !context.lead.email || !context.lead.linkedin_url;
+      return {
+        ...context,
+        currentState: needsContactFinding 
+          ? WorkflowState.CONTACT_FINDER 
+          : WorkflowState.ENRICHMENT,
+        steps: [...context.steps, step],
+      };
+    }
+
+    // Profile data was successfully scraped - update lead
     const updateData: any = {
       updated_at: new Date().toISOString(),
     };

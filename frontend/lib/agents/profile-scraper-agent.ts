@@ -52,7 +52,7 @@ export interface ProfileScraperResult {
 /**
  * Scrape a LinkedIn profile
  */
-async function scrapeLinkedInProfile(url: string): Promise<string> {
+async function scrapeLinkedInProfile(url: string): Promise<string | null> {
   console.log(`Scraping LinkedIn profile: ${url}`);
 
   try {
@@ -63,22 +63,30 @@ async function scrapeLinkedInProfile(url: string): Promise<string> {
     });
 
     if (!result.success || !result.markdown) {
-      throw new Error("Failed to scrape LinkedIn profile");
+      // LinkedIn requires Firecrawl Enterprise - this is expected
+      console.warn("⚠️  LinkedIn scraping unavailable (Firecrawl Enterprise required). Enrichment Agent will handle data collection.");
+      return null;
     }
 
     return result.markdown;
   } catch (error) {
+    // Check if it's the expected 403 from Firecrawl for LinkedIn
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes("403") || errorMessage.includes("not currently supported")) {
+      console.warn("⚠️  LinkedIn scraping unavailable (Firecrawl Enterprise required). Enrichment Agent will handle data collection.");
+      return null;
+    }
+    
+    // For other unexpected errors, log as error
     console.error("LinkedIn scrape error:", error);
-    throw new Error(
-      `Failed to scrape LinkedIn: ${error instanceof Error ? error.message : "Unknown error"}`,
-    );
+    return null;
   }
 }
 
 /**
  * Scrape an X (Twitter) profile
  */
-async function scrapeTwitterProfile(url: string): Promise<string> {
+async function scrapeTwitterProfile(url: string): Promise<string | null> {
   console.log(`Scraping X/Twitter profile: ${url}`);
 
   try {
@@ -89,15 +97,15 @@ async function scrapeTwitterProfile(url: string): Promise<string> {
     });
 
     if (!result.success || !result.markdown) {
-      throw new Error("Failed to scrape X profile");
+      console.warn("⚠️  X/Twitter scraping failed. Enrichment Agent will handle data collection.");
+      return null;
     }
 
     return result.markdown;
   } catch (error) {
-    console.error("Twitter scrape error:", error);
-    throw new Error(
-      `Failed to scrape X profile: ${error instanceof Error ? error.message : "Unknown error"}`,
-    );
+    console.warn("⚠️  X/Twitter scraping failed. Enrichment Agent will handle data collection.");
+    console.debug("X scrape error details:", error);
+    return null;
   }
 }
 
@@ -269,22 +277,30 @@ export async function scrapeProfile(
     if (linkedinUrl) {
       console.log("Scraping LinkedIn profile...");
       const linkedinContent = await scrapeLinkedInProfile(linkedinUrl);
-      linkedinData = await extractProfileInfo(
-        linkedinContent,
-        "linkedin",
-        existingData,
-      );
+      if (linkedinContent) {
+        linkedinData = await extractProfileInfo(
+          linkedinContent,
+          "linkedin",
+          existingData,
+        );
+      } else {
+        console.log("LinkedIn scraping unavailable, skipping profile extraction");
+      }
     }
 
     // Scrape Twitter if URL provided
     if (twitterUrl) {
       console.log("Scraping X/Twitter profile...");
       const twitterContent = await scrapeTwitterProfile(twitterUrl);
-      twitterData = await extractProfileInfo(
-        twitterContent,
-        "twitter",
-        existingData,
-      );
+      if (twitterContent) {
+        twitterData = await extractProfileInfo(
+          twitterContent,
+          "twitter",
+          existingData,
+        );
+      } else {
+        console.log("X/Twitter scraping unavailable, skipping profile extraction");
+      }
     }
 
     // Determine profile type
@@ -294,6 +310,17 @@ export async function scrapeProfile(
       profileType = "linkedin";
     } else {
       profileType = "twitter";
+    }
+
+    // If no data was scraped from either source
+    if (!linkedinData && !twitterData) {
+      console.log("No profile data scraped, workflow will continue with enrichment");
+      return {
+        profileType,
+        confidence: "low",
+        extractionSummary: "Profile scraping unavailable. Enrichment Agent will collect data via web search.",
+        notes: "LinkedIn/X scraping requires Firecrawl Enterprise plan. Workflow continues with enrichment.",
+      } as ProfileScraperResult;
     }
 
     // Merge data from both sources
@@ -306,10 +333,14 @@ export async function scrapeProfile(
       profileType,
     } as ProfileScraperResult;
   } catch (error) {
-    console.error("Profile scraping failed:", error);
-    throw new Error(
-      `Profile scraping failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-    );
+    console.error("Unexpected error in profile scraping:", error);
+    // Return graceful failure instead of throwing
+    return {
+      profileType: linkedinUrl ? "linkedin" : "twitter",
+      confidence: "low",
+      extractionSummary: "Profile scraping encountered an error. Enrichment Agent will collect data via web search.",
+      notes: `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+    } as ProfileScraperResult;
   }
 }
 
